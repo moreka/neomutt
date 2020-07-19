@@ -29,6 +29,7 @@
 #include "config/lib.h"
 #include "core/lib.h"
 
+struct EventMouse;
 struct IndexSharedData;
 struct MuttWindow;
 
@@ -90,6 +91,9 @@ enum CommandResult sb_parse_whitelist  (struct Buffer *buf, struct Buffer *s, in
 // functions.c
 bool sb_next(struct SidebarWindowData *wdata);
 bool sb_prev(struct SidebarWindowData *wdata);
+
+// mouse.c
+bool sidebar_mouse(struct MuttWindow *win, struct EventMouse *em);
 
 // observer.c
 int sb_insertion_window_observer(struct NotifyCallback *nc);
