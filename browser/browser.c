@@ -33,7 +33,7 @@
  *
  * | Name           | Type           | See Also                  |
  * | :------------- | :------------- | :------------------------ |
- * | Browser Dialog | WT_DLG_BROWSER | mutt_buffer_select_file() |
+ * | Browser Dialog | WT_DLG_BROWSER | mutt_select_file() |
  *
  * **Parent**
  * - @ref gui_dialog
@@ -1096,15 +1096,15 @@ void mutt_browser_select_dir(const char *f)
 }
 
 /**
- * mutt_buffer_select_file - Let the user select a file
+ * mutt_select_file - Let the user select a file
  * @param[in]  file     Buffer for the result
  * @param[in]  flags    Flags, see #SelectFileFlags
  * @param[in]  m        Mailbox
  * @param[out] files    Array of selected files
  * @param[out] numfiles Number of selected files
  */
-void mutt_buffer_select_file(struct Buffer *file, SelectFileFlags flags,
-                             struct Mailbox *m, char ***files, int *numfiles)
+void mutt_select_file(struct Buffer *file, SelectFileFlags flags,
+                      struct Mailbox *m, char ***files, int *numfiles)
 {
   struct BrowserState state = { { 0 } };
   struct Menu *menu = NULL;
@@ -1726,8 +1726,8 @@ void mutt_buffer_select_file(struct Buffer *file, SelectFileFlags flags,
 
         if (op == OP_CHANGE_DIRECTORY)
         {
-          int ret = mutt_buffer_get_field(_("Chdir to: "), buf, MUTT_COMP_FILE,
-                                          false, NULL, NULL, NULL);
+          int ret = mutt_get_field(_("Chdir to: "), buf, MUTT_COMP_FILE, false,
+                                   NULL, NULL, NULL);
           if ((ret != 0) && mutt_buffer_is_empty(buf))
           {
             mutt_buffer_pool_release(&buf);
@@ -1820,8 +1820,8 @@ void mutt_buffer_select_file(struct Buffer *file, SelectFileFlags flags,
         const struct Regex *c_mask = cs_subset_regex(NeoMutt->sub, "mask");
         struct Buffer *buf = mutt_buffer_pool_get();
         mutt_buffer_strcpy(buf, c_mask ? c_mask->pattern : NULL);
-        if (mutt_buffer_get_field(_("File Mask: "), buf, MUTT_COMP_NO_FLAGS,
-                                  false, NULL, NULL, NULL) != 0)
+        if (mutt_get_field(_("File Mask: "), buf, MUTT_COMP_NO_FLAGS, false,
+                           NULL, NULL, NULL) != 0)
         {
           mutt_buffer_pool_release(&buf);
           continue;
@@ -2026,8 +2026,8 @@ void mutt_buffer_select_file(struct Buffer *file, SelectFileFlags flags,
         struct Buffer *buf = mutt_buffer_pool_get();
         mutt_buffer_printf(buf, "%s/", mutt_buffer_string(&LastDir));
         /* buf comes from the buffer pool, so defaults to size 1024 */
-        if (mutt_buffer_get_field(_("New file name: "), buf, MUTT_COMP_FILE,
-                                  false, NULL, NULL, NULL) == 0)
+        if (mutt_get_field(_("New file name: "), buf, MUTT_COMP_FILE, false,
+                           NULL, NULL, NULL) == 0)
         {
           mutt_buffer_copy(file, buf);
           mutt_buffer_pool_release(&buf);
@@ -2175,8 +2175,7 @@ void mutt_buffer_select_file(struct Buffer *file, SelectFileFlags flags,
             else
               snprintf(tmp2, sizeof(tmp2), _("Unsubscribe pattern: "));
             /* buf comes from the buffer pool, so defaults to size 1024 */
-            if ((mutt_buffer_get_field(tmp2, buf, MUTT_COMP_PATTERN, false,
-                                       NULL, NULL, NULL) != 0) ||
+            if ((mutt_get_field(tmp2, buf, MUTT_COMP_PATTERN, false, NULL, NULL, NULL) != 0) ||
                 mutt_buffer_is_empty(buf))
             {
               mutt_buffer_pool_release(&buf);
