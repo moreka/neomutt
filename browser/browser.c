@@ -1076,6 +1076,19 @@ void mutt_browser_select_dir(const char *f)
   mutt_buffer_strcpy(&LastDir, buf);
 }
 
+void dump_state(struct BrowserState *state)
+{
+  if (!state)
+    return;
+
+  mutt_debug(LL_DEBUG1, "State:\n");
+  struct FolderFile *ff = NULL;
+  ARRAY_FOREACH(ff, &state->entry)
+  {
+    mutt_debug(LL_DEBUG1, "\t%s\n", ff->name);
+  }
+}
+
 /**
  * mutt_buffer_select_file - Let the user select a file
  * @param[in]  file     Buffer for the result
@@ -1327,6 +1340,7 @@ void mutt_buffer_select_file(struct Buffer *file, SelectFileFlags flags,
   // only now do we have a valid priv->state to attach
   priv->menu->mdata = &priv->state.entry;
 
+  dump_state(&priv->state);
   // ---------------------------------------------------------------------------
   // Event Loop
   int op = OP_NULL;
