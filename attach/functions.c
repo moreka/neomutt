@@ -34,7 +34,9 @@
 #include "email/lib.h"
 #include "core/lib.h"
 #include "gui/lib.h"
+#include "debug/lib.h"
 #include "functions.h"
+#include "attach/lib.h"
 #include "menu/lib.h"
 #include "ncrypt/lib.h"
 #include "question/lib.h"
@@ -296,9 +298,14 @@ static int op_attachment_pipe(struct AttachPrivateData *priv, int op)
  */
 static int op_attachment_print(struct AttachPrivateData *priv, int op)
 {
+#ifdef USE_DEBUG_GRAPHVIZ
+  // dump_graphviz_email(e);
+  dump_graphviz_attach_ctx(priv->actx);
+#else
   struct AttachPtr *cur_att = current_attachment(priv->actx, priv->menu);
   mutt_print_attachment_list(priv->actx, cur_att->fp, priv->menu->tag_prefix,
                              cur_att->body);
+#endif
   return FR_SUCCESS;
 }
 
