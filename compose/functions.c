@@ -80,6 +80,9 @@
 #ifdef USE_IMAP
 #include "imap/lib.h"
 #endif
+#ifdef USE_DEBUG_GRAPHVIZ
+#include "debug/lib.h"
+#endif
 
 /**
  * check_count - Check if there are any attachments
@@ -1394,6 +1397,9 @@ done:
  */
 static int op_attachment_print(struct ComposeSharedData *shared, int op)
 {
+#ifdef USE_DEBUG_GRAPHVIZ
+  dump_body_one_line(shared->email->body);
+#else
   struct AttachCtx *actx = shared->adata->actx;
   if (!check_count(actx))
     return FR_NO_ACTION;
@@ -1408,6 +1414,7 @@ static int op_attachment_print(struct ComposeSharedData *shared, int op)
 
   mutt_print_attachment_list(actx, NULL, menu->tag_prefix, cur_att->body);
   /* no send2hook, since this doesn't modify the message */
+#endif
   return FR_SUCCESS;
 }
 
