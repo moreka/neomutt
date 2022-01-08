@@ -89,6 +89,9 @@
 #include "opcodes.h"
 #include "options.h"
 #include "shared_data.h"
+#ifdef USE_DEBUG_COMPOSE
+#include "debug/lib.h"
+#endif
 
 /// Help Bar for the Compose dialog
 static const struct Mapping ComposeHelp[] = {
@@ -316,6 +319,10 @@ static struct MuttWindow *compose_dlg_init(struct ConfigSubset *sub,
 int mutt_compose_menu(struct Email *e, struct Buffer *fcc, uint8_t flags,
                       struct ConfigSubset *sub)
 {
+#ifdef USE_DEBUG_COMPOSE
+  static bool automate = false;
+  int action_num = 0;
+#endif
   struct MuttWindow *dlg = compose_dlg_init(sub, e, fcc);
   struct ComposeSharedData *shared = dlg->wdata;
   shared->mailbox = get_current_mailbox();
@@ -357,8 +364,17 @@ int mutt_compose_menu(struct Email *e, struct Buffer *fcc, uint8_t flags,
     menu_tagging_dispatcher(menu->win, op);
     window_redraw(NULL);
 
+#ifdef USE_DEBUG_COMPOSE
+    if (automate)
+      compose_automate(shared->adata->actx, &action_num);
+#endif
     op = km_dokey(menu->type);
     mutt_debug(LL_DEBUG1, "Got op %s (%d)\n", opcodes_get_name(op), op);
+#ifdef USE_DEBUG_COMPOSE
+    if (op == OP_COMPOSE_AUTOMATE)
+      automate = true;
+#endif
+
     if (op < 0)
       continue;
     if (op == OP_NULL)
