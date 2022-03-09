@@ -1012,7 +1012,22 @@ static int op_main_limit(struct IndexSharedData *shared, struct IndexPrivateData
       ((op == OP_MAIN_LIMIT) &&
        (mutt_pattern_func(shared->ctx, MUTT_LIMIT, _("Limit to messages matching: ")) == 0)))
   {
-    if (old_index >= 0)
+    for (; old_index >= 0; old_index--)
+    {
+      if (shared->mailbox->emails[old_index]->visible)
+      {
+        mutt_debug(LL_DEBUG1, "QWQ Prev visible = %d, index = %d\n", old_index, shared->mailbox->emails[old_index]->index);
+        old_index = shared->mailbox->emails[old_index]->index;
+        break;
+      }
+    }
+    mutt_debug(LL_DEBUG1, "QWQ old_index = %d\n", old_index);
+
+    if (old_index < 1)
+    {
+      menu_set_index(priv->menu, 0);
+    }
+    else
     {
       priv->menu->max = shared->mailbox->vcount;
       /* try to find what used to be the current message */
