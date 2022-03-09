@@ -603,6 +603,7 @@ static void window_repaint(struct MuttWindow *win)
  */
 void window_redraw(struct MuttWindow *win)
 {
+  mutt_debug(LL_DEBUG1, "SigWinch = %s\n", SigWinch ? "true" : "false");
   if (!win)
     win = RootWindow;
 
