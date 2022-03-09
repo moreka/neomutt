@@ -85,6 +85,9 @@
 #ifdef ENABLE_NLS
 #include <libintl.h>
 #endif
+#ifdef USE_SSL
+#include "conn/ssl.h"
+#endif
 
 static const char *Not_available_in_this_menu =
     N_("Not available in this menu");
@@ -1965,21 +1968,22 @@ static int op_prev_entry(struct IndexSharedData *shared, struct IndexPrivateData
  */
 static int op_print(struct IndexSharedData *shared, struct IndexPrivateData *priv, int op)
 {
-  struct EmailList el = STAILQ_HEAD_INITIALIZER(el);
-  el_add_tagged(&el, shared->ctx, shared->email, priv->tag);
-  mutt_print_message(shared->mailbox, &el);
-  emaillist_clear(&el);
+#ifdef USE_SSL
+  struct CertArray carr = ARRAY_HEAD_INITIALIZER;
 
-#ifdef USE_IMAP
-  /* in an IMAP folder index with imap_peek=no, printing could change
-   * new or old messages status to read. Redraw what's needed.  */
-  const bool c_imap_peek = cs_subset_bool(shared->sub, "imap_peek");
-  if ((shared->mailbox->type == MUTT_IMAP) && !c_imap_peek)
+  struct Buffer *buf = mutt_buffer_pool_get();
+
+  for (int i = 0; i < 250; i++)
   {
-    menu_queue_redraw(priv->menu, (priv->tag ? MENU_REDRAW_INDEX : MENU_REDRAW_CURRENT));
+    mutt_buffer_printf(buf, "This is number %d", i);
+    ARRAY_ADD(&carr, mutt_buffer_strdup(buf));
   }
-#endif
 
+  dlg_verify_certificate("title", &carr, true, true);
+
+  cert_array_clear(&carr);
+  mutt_buffer_pool_release(&buf);
+#endif
   return IR_SUCCESS;
 }
 
@@ -3288,7 +3292,7 @@ struct IndexFunction IndexFunctions[] = {
   { OP_PREV_ENTRY,                          op_prev_entry,                        CHECK_IN_MAILBOX | CHECK_MSGCOUNT | CHECK_VISIBLE },
   { OP_PREV_LINE,                           op_menu_move,                         CHECK_NO_FLAGS },
   { OP_PREV_PAGE,                           op_menu_move,                         CHECK_NO_FLAGS },
-  { OP_PRINT,                               op_print,                             CHECK_IN_MAILBOX | CHECK_MSGCOUNT | CHECK_VISIBLE },
+  { OP_PRINT,                               op_print,                             CHECK_NO_FLAGS },
   { OP_PURGE_MESSAGE,                       op_delete,                            CHECK_IN_MAILBOX | CHECK_MSGCOUNT | CHECK_READONLY | CHECK_VISIBLE },
   { OP_PURGE_THREAD,                        op_delete_thread,                     CHECK_IN_MAILBOX | CHECK_MSGCOUNT | CHECK_READONLY | CHECK_VISIBLE },
   { OP_QUERY,                               op_query,                             CHECK_ATTACH },
