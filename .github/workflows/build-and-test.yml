@@ -14,6 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/neomutt/docker-build
 
+    env:
+      asan_options: detect_leaks=1:color=never:log_path=asan:print_legend=false:print_summary=false
+      common_options: --full-doc --asan
+
     strategy:
       # Limit jobs to one at a time so that ccache really helps later builds
       max-parallel: 1
@@ -45,7 +49,7 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1
 
     - name: Configure Neomutt
-      run: ./configure ${{ matrix.cfg.options }}
+      run: ./configure ${{ env.common_options }} ${{ matrix.cfg.options }}
 
     - name: Build Neomutt
       run: make -j 2
@@ -58,6 +62,16 @@ jobs:
 
     - name: Run Tests
       run: |
+        export ASAN_OPTIONS="$asan_options"
         export NEOMUTT_TEST_DIR=$GITHUB_WORKSPACE/test-files
         make test
+
+    - name: Upload ASAN Log
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: asan-log
+        path: ${{ github.workspace }}/asan.*
+        retention-days: 10
+        if-no-files-found: ignore
 
