@@ -1,0 +1,272 @@
+/**
+ * @file
+ * Enter functions
+ *
+ * @authors
+ * Copyright (C) 2022 Richard Russon <rich@flatcap.org>
+ *
+ * @copyright
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @page enter_functions Enter functions
+ *
+ * Enter functions
+ */
+
+#include "config.h"
+#include "gui/lib.h"
+#include "functions.h"
+#include "index/lib.h"
+#include "menu/lib.h"
+#include "opcodes.h"
+
+struct EnterWindowData;
+
+/**
+ * op_editor_complete - complete filename or alias - Implements ::enter_function_t - @ingroup enter_function_api
+ *
+ * This function handles:
+ * - OP_EDITOR_COMPLETE
+ * - OP_EDITOR_COMPLETE_QUERY
+ */
+static int op_editor_complete(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_history_down - scroll down through the history list - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_history_down(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_history_search - search through the history list - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_history_search(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_history_up - scroll up through the history list - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_history_up(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_mailbox_cycle - cycle among incoming mailboxes - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_mailbox_cycle(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+// -----------------------------------------------------------------------------
+
+/**
+ * op_editor_backspace - delete the char in front of the cursor - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_backspace(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_backward_char - move the cursor one character to the left - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_backward_char(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_backward_word - move the cursor to the beginning of the word - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_backward_word(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_bol - jump to the beginning of the line - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_bol(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_capitalize_word - capitalize the word - Implements ::enter_function_t - @ingroup enter_function_api
+ * This function handles:
+ * - OP_EDITOR_CAPITALIZE_WORD
+ * - OP_EDITOR_DOWNCASE_WORD
+ * - OP_EDITOR_UPCASE_WORD
+ */
+static int op_editor_capitalize_word(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_delete_char - delete the char under the cursor - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_delete_char(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_eol - jump to the end of the line - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_eol(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_forward_char - move the cursor one character to the right - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_forward_char(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_forward_word - move the cursor to the end of the word - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_forward_word(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_kill_eol - delete chars from cursor to end of line - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_kill_eol(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_kill_eow - delete chars from the cursor to the end of the word - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_kill_eow(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_kill_line - delete all chars on the line - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_kill_line(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_kill_word - delete the word in front of the cursor - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_kill_word(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_quote_char - quote the next typed key - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_quote_char(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+/**
+ * op_editor_transpose_chars - transpose character under cursor with previous - Implements ::enter_function_t - @ingroup enter_function_api
+ */
+static int op_editor_transpose_chars(struct EnterWindowData *wdata, int op)
+{
+  return IR_SUCCESS;
+}
+
+// -----------------------------------------------------------------------------
+
+/**
+ * EnterFunctions - All the NeoMutt functions that Enter supports
+ */
+struct EnterFunction EnterFunctions[] = {
+  // clang-format off
+  { OP_EDITOR_BACKSPACE,          op_editor_backspace },
+  { OP_EDITOR_BACKWARD_CHAR,      op_editor_backward_char },
+  { OP_EDITOR_BACKWARD_WORD,      op_editor_backward_word },
+  { OP_EDITOR_BOL,                op_editor_bol },
+  { OP_EDITOR_CAPITALIZE_WORD,    op_editor_capitalize_word },
+  { OP_EDITOR_COMPLETE,           op_editor_complete },
+  { OP_EDITOR_COMPLETE_QUERY,     op_editor_complete },
+  { OP_EDITOR_DELETE_CHAR,        op_editor_delete_char },
+  { OP_EDITOR_DOWNCASE_WORD,      op_editor_capitalize_word },
+  { OP_EDITOR_EOL,                op_editor_eol },
+  { OP_EDITOR_FORWARD_CHAR,       op_editor_forward_char },
+  { OP_EDITOR_FORWARD_WORD,       op_editor_forward_word },
+  { OP_EDITOR_HISTORY_DOWN,       op_editor_history_down },
+  { OP_EDITOR_HISTORY_SEARCH,     op_editor_history_search },
+  { OP_EDITOR_HISTORY_UP,         op_editor_history_up },
+  { OP_EDITOR_KILL_EOL,           op_editor_kill_eol },
+  { OP_EDITOR_KILL_EOW,           op_editor_kill_eow },
+  { OP_EDITOR_KILL_LINE,          op_editor_kill_line },
+  { OP_EDITOR_KILL_WORD,          op_editor_kill_word },
+  { OP_EDITOR_MAILBOX_CYCLE,      op_editor_mailbox_cycle },
+  { OP_EDITOR_QUOTE_CHAR,         op_editor_quote_char },
+  { OP_EDITOR_TRANSPOSE_CHARS,    op_editor_transpose_chars },
+  { OP_EDITOR_UPCASE_WORD,        op_editor_capitalize_word },
+  { 0, NULL },
+  // clang-format on
+};
+
+/**
+ * enter_function_dispatcher - Perform a Enter function
+ * @param win Enter Window
+ * @param op  Operation to perform, e.g. OP_ENTER_NEXT
+ * @retval num #IndexRetval, e.g. #IR_SUCCESS
+ */
+int enter_function_dispatcher(struct MuttWindow *win, int op)
+{
+  if (!win || !win->wdata)
+    return IR_UNKNOWN;
+
+  struct EnterWindowData *wdata = win->wdata;
+  int rc = IR_UNKNOWN;
+  for (size_t i = 0; EnterFunctions[i].op != OP_NULL; i++)
+  {
+    const struct EnterFunction *fn = &EnterFunctions[i];
+    if (fn->op == op)
+    {
+      rc = fn->function(wdata, op);
+      break;
+    }
+  }
+
+  if (rc == IR_UNKNOWN) // Not our function
+    return rc;
+
+  const char *result = mutt_map_get_name(rc, RetvalNames);
+  mutt_debug(LL_DEBUG1, "Handled %s (%d) -> %s\n", opcodes_get_name(op), op, NONULL(result));
+
+  return rc;
+}
