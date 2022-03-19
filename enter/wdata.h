@@ -47,6 +47,7 @@ enum EnterRedrawFlags
  */
 struct EnterWindowData
 {
+  // Function parameters
   char *buf;                      ///< XXX
   size_t buflen;                  ///< XXX
   int col;                        ///< XXX
@@ -57,10 +58,10 @@ struct EnterWindowData
   int *numfiles;                  ///< XXX
   struct EnterState *state;       ///< XXX
 
+  // Local variables
   enum EnterRedrawFlags redraw;   ///< XXX
   bool pass;                      ///< XXX
   bool first;                     ///< XXX
-  int ch;                         ///< XXX
   enum HistoryClass hclass;       ///< XXX
   wchar_t *tempbuf;               ///< XXX
   size_t templen;                 ///< XXX

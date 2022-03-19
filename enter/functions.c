@@ -44,7 +44,7 @@ struct EnterWindowData;
  */
 static int op_editor_complete(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -52,7 +52,7 @@ static int op_editor_complete(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_history_down(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -60,7 +60,7 @@ static int op_editor_history_down(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_history_search(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -68,7 +68,7 @@ static int op_editor_history_search(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_history_up(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -76,7 +76,7 @@ static int op_editor_history_up(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_mailbox_cycle(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 // -----------------------------------------------------------------------------
@@ -86,7 +86,7 @@ static int op_editor_mailbox_cycle(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_backspace(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -94,7 +94,7 @@ static int op_editor_backspace(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_backward_char(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -102,7 +102,7 @@ static int op_editor_backward_char(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_backward_word(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -110,7 +110,7 @@ static int op_editor_backward_word(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_bol(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -122,7 +122,7 @@ static int op_editor_bol(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_capitalize_word(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -130,7 +130,7 @@ static int op_editor_capitalize_word(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_delete_char(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -138,7 +138,7 @@ static int op_editor_delete_char(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_eol(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -146,7 +146,7 @@ static int op_editor_eol(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_forward_char(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -154,7 +154,7 @@ static int op_editor_forward_char(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_forward_word(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -162,7 +162,7 @@ static int op_editor_forward_word(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_kill_eol(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -170,7 +170,7 @@ static int op_editor_kill_eol(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_kill_eow(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -178,7 +178,7 @@ static int op_editor_kill_eow(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_kill_line(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -186,7 +186,7 @@ static int op_editor_kill_line(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_kill_word(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -194,7 +194,7 @@ static int op_editor_kill_word(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_quote_char(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 /**
@@ -202,7 +202,7 @@ static int op_editor_quote_char(struct EnterWindowData *wdata, int op)
  */
 static int op_editor_transpose_chars(struct EnterWindowData *wdata, int op)
 {
-  return IR_SUCCESS;
+  return FR_SUCCESS;
 }
 
 // -----------------------------------------------------------------------------
@@ -243,15 +243,15 @@ struct EnterFunction EnterFunctions[] = {
  * enter_function_dispatcher - Perform a Enter function
  * @param win Enter Window
  * @param op  Operation to perform, e.g. OP_ENTER_NEXT
- * @retval num #IndexRetval, e.g. #IR_SUCCESS
+ * @retval num #IndexRetval, e.g. #FR_SUCCESS
  */
 int enter_function_dispatcher(struct MuttWindow *win, int op)
 {
   if (!win || !win->wdata)
-    return IR_UNKNOWN;
+    return FR_UNKNOWN;
 
   struct EnterWindowData *wdata = win->wdata;
-  int rc = IR_UNKNOWN;
+  int rc = FR_UNKNOWN;
   for (size_t i = 0; EnterFunctions[i].op != OP_NULL; i++)
   {
     const struct EnterFunction *fn = &EnterFunctions[i];
@@ -262,10 +262,10 @@ int enter_function_dispatcher(struct MuttWindow *win, int op)
     }
   }
 
-  if (rc == IR_UNKNOWN) // Not our function
+  if (rc == FR_UNKNOWN) // Not our function
     return rc;
 
-  const char *result = mutt_map_get_name(rc, RetvalNames);
+  const char *result = dispacher_get_retval_name(rc);
   mutt_debug(LL_DEBUG1, "Handled %s (%d) -> %s\n", opcodes_get_name(op), op, NONULL(result));
 
   return rc;
