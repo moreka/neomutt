@@ -115,6 +115,87 @@ static void replace_part(struct EnterState *state, size_t from, const char *buf)
 }
 
 /**
+ * self_insert - Insert a normal character
+ * @param wdata Enter window data
+ * @retval true If done (enter pressed)
+ */
+bool self_insert(struct EnterWindowData *wdata)
+{
+  if (!wdata)
+    return true;
+
+  wdata->state->tabs = 0;
+  wchar_t wc = 0;
+  /* use the raw keypress */
+  int ch = LastKey;
+
+  /* quietly ignore all other function keys */
+  if (ch & ~0xff)
+    return false;
+
+  /* gather the octets into a wide character */
+  {
+    char c = ch;
+    size_t k = mbrtowc(&wc, &c, 1, wdata->mbstate);
+    if (k == (size_t) (-2))
+      return false;
+    else if ((k != 0) && (k != 1))
+    {
+      memset(wdata->mbstate, 0, sizeof(*wdata->mbstate));
+      return false;
+    }
+  }
+
+  if (wdata->first && (wdata->flags & MUTT_COMP_CLEAR))
+  {
+    wdata->first = false;
+    if (IsWPrint(wc)) /* why? */
+    {
+      wdata->state->curpos = 0;
+      wdata->state->lastchar = 0;
+    }
+  }
+
+  if ((wc == '\r') || (wc == '\n'))
+  {
+    /* Convert from wide characters */
+    mutt_mb_wcstombs(wdata->buf, wdata->buflen, wdata->state->wbuf, wdata->state->lastchar);
+    if (!wdata->pass)
+      mutt_hist_add(wdata->hclass, wdata->buf, true);
+
+    if (wdata->multiple)
+    {
+      char **tfiles = NULL;
+      *wdata->numfiles = 1;
+      tfiles = mutt_mem_calloc(*wdata->numfiles, sizeof(char *));
+      mutt_expand_path(wdata->buf, wdata->buflen);
+      tfiles[0] = mutt_str_dup(wdata->buf);
+      *wdata->files = tfiles;
+    }
+    return true;
+  }
+  else if (wc && ((wc < ' ') || IsWPrint(wc))) /* why? */
+  {
+    if (wdata->state->lastchar >= wdata->state->wbuflen)
+    {
+      wdata->state->wbuflen = wdata->state->lastchar + 20;
+      mutt_mem_realloc(&wdata->state->wbuf, wdata->state->wbuflen * sizeof(wchar_t));
+    }
+    memmove(wdata->state->wbuf + wdata->state->curpos + 1, wdata->state->wbuf + wdata->state->curpos,
+            (wdata->state->lastchar - wdata->state->curpos) * sizeof(wchar_t));
+    wdata->state->wbuf[wdata->state->curpos++] = wc;
+    wdata->state->lastchar++;
+  }
+  else
+  {
+    mutt_flushinp();
+    mutt_beep(false);
+  }
+
+  return false;
+}
+
+/**
  * mutt_enter_string_full - Ask the user for a string
  * @param[in]  buf      Buffer to store the string
  * @param[in]  buflen   Buffer length
@@ -137,14 +218,14 @@ int mutt_enter_string_full(char *buf, size_t buflen, int col, CompletionFlags fl
   if (!win)
     return -1;
 
-  struct EnterWindowData wdata = {
-    buf, buflen, col, flags, multiple, m, files, numfiles, state, ENTER_REDRAW_NONE, (flags & MUTT_COMP_PASS), true, 0, NULL, 0
-  };
-
   int width = win->state.cols - col - 1;
   int ch;
   int rc = 0;
   mbstate_t mbstate = { 0 };
+
+  struct EnterWindowData wdata = {
+    buf, buflen, col, flags, multiple, m, files, numfiles, state, ENTER_REDRAW_NONE, (flags & MUTT_COMP_PASS), true, 0, NULL, 0, &mbstate
+  };
 
   if (wdata.state->wbuf)
   {
@@ -474,7 +555,9 @@ int mutt_enter_string_full(char *buf, size_t buflen, int col, CompletionFlags fl
           }
           else if (!(wdata.flags & MUTT_COMP_FILE))
           {
-            goto self_insert;
+            if (self_insert(&wdata))
+              goto bye;
+            break;
           }
           /* fallthrough */
 
@@ -577,7 +660,10 @@ int mutt_enter_string_full(char *buf, size_t buflen, int col, CompletionFlags fl
               }
             }
             else
-              goto self_insert;
+            {
+              if (self_insert(&wdata))
+                goto bye;
+            }
             break;
           }
           else if ((wdata.flags & MUTT_COMP_ALIAS) && (ch == OP_EDITOR_COMPLETE_QUERY))
@@ -673,7 +759,10 @@ int mutt_enter_string_full(char *buf, size_t buflen, int col, CompletionFlags fl
           }
 #endif
           else
-            goto self_insert;
+          {
+            if (self_insert(&wdata))
+              goto bye;
+          }
           break;
 
         case OP_EDITOR_QUOTE_CHAR:
@@ -686,7 +775,8 @@ int mutt_enter_string_full(char *buf, size_t buflen, int col, CompletionFlags fl
           if (event.ch >= 0)
           {
             LastKey = event.ch;
-            goto self_insert;
+            if (self_insert(&wdata))
+              goto bye;
           }
           break;
         }
@@ -713,80 +803,12 @@ int mutt_enter_string_full(char *buf, size_t buflen, int col, CompletionFlags fl
     }
     else
     {
-    self_insert:
-      wdata.state->tabs = 0;
-      wchar_t wc = 0;
-      /* use the raw keypress */
-      ch = LastKey;
-
-      /* quietly ignore all other function keys */
-      if (ch & ~0xff)
-        continue;
-
-      /* gather the octets into a wide character */
-      {
-        char c = ch;
-        size_t k = mbrtowc(&wc, &c, 1, &mbstate);
-        if (k == (size_t) (-2))
-          continue;
-        else if ((k != 0) && (k != 1))
-        {
-          memset(&mbstate, 0, sizeof(mbstate));
-          continue;
-        }
-      }
-
-      if (wdata.first && (wdata.flags & MUTT_COMP_CLEAR))
-      {
-        wdata.first = false;
-        if (IsWPrint(wc)) /* why? */
-        {
-          wdata.state->curpos = 0;
-          wdata.state->lastchar = 0;
-        }
-      }
-
-      if ((wc == '\r') || (wc == '\n'))
-      {
-        /* Convert from wide characters */
-        mutt_mb_wcstombs(wdata.buf, wdata.buflen, wdata.state->wbuf, wdata.state->lastchar);
-        if (!wdata.pass)
-          mutt_hist_add(wdata.hclass, wdata.buf, true);
-
-        if (wdata.multiple)
-        {
-          char **tfiles = NULL;
-          *wdata.numfiles = 1;
-          tfiles = mutt_mem_calloc(*wdata.numfiles, sizeof(char *));
-          mutt_expand_path(wdata.buf, wdata.buflen);
-          tfiles[0] = mutt_str_dup(wdata.buf);
-          *wdata.files = tfiles;
-        }
-        rc = 0;
+      if (self_insert(&wdata))
         goto bye;
-      }
-      else if (wc && ((wc < ' ') || IsWPrint(wc))) /* why? */
-      {
-        if (wdata.state->lastchar >= wdata.state->wbuflen)
-        {
-          wdata.state->wbuflen = wdata.state->lastchar + 20;
-          mutt_mem_realloc(&wdata.state->wbuf, wdata.state->wbuflen * sizeof(wchar_t));
-        }
-        memmove(wdata.state->wbuf + wdata.state->curpos + 1, wdata.state->wbuf + wdata.state->curpos,
-                (wdata.state->lastchar - wdata.state->curpos) * sizeof(wchar_t));
-        wdata.state->wbuf[wdata.state->curpos++] = wc;
-        wdata.state->lastchar++;
-      }
-      else
-      {
-        mutt_flushinp();
-        mutt_beep(false);
-      }
     }
   }
 
 bye:
-
   mutt_hist_reset_state(wdata.hclass);
   FREE(&wdata.tempbuf);
   return rc;

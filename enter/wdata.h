@@ -65,6 +65,7 @@ struct EnterWindowData
   enum HistoryClass hclass;       ///< XXX
   wchar_t *tempbuf;               ///< XXX
   size_t templen;                 ///< XXX
+  mbstate_t *mbstate;             ///< XXX
 };
 
 #endif /* MUTT_ENTER_WDATA_H */
