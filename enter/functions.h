@@ -49,5 +49,6 @@ struct EnterFunction
 extern struct EnterFunction EnterFunctions[];
 
 int enter_function_dispatcher(struct MuttWindow *win, int op);
+bool self_insert(struct EnterWindowData *wdata);
 
 #endif /* MUTT_ENTER_FUNCTIONS_H */
