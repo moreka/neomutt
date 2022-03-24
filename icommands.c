@@ -386,11 +386,11 @@ static enum CommandResult icmd_color(struct Buffer *buf, struct Buffer *s,
         continue;
 
       const char *swatch = color_debug_log_color_attrs(cc->fg, cc->bg, ac->attrs);
-      mutt_buffer_add_printf(
-          &filebuf, "color quoted%d %-30s %-8s %-8s # %s\n", i,
-          color_debug_log_attrs_list(ac->attrs),
-          color_debug_log_name(color_fg, sizeof(color_fg), cc->fg),
-          color_debug_log_name(color_bg, sizeof(color_bg), cc->bg), swatch);
+      mutt_buffer_add_printf(&filebuf, "color quoted%d %-30s %-8s %-8s # %s\n",
+                             i, color_debug_log_attrs_list(ac->attrs),
+                             color_debug_log_name(color_fg, sizeof(color_fg), cc->fg),
+                             color_debug_log_name(color_bg, sizeof(color_bg), cc->bg),
+                             swatch);
     }
   }
 
@@ -454,10 +454,11 @@ static enum CommandResult icmd_color(struct Buffer *buf, struct Buffer *s,
         continue;
 
       const char *swatch = color_debug_log_color_attrs(cc->fg, cc->bg, ac->attrs);
-      mutt_buffer_add_printf(
-          &filebuf, "# %-30s %-8s %-8s # %s\n", color_debug_log_attrs_list(ac->attrs),
-          color_debug_log_name(color_fg, sizeof(color_fg), cc->fg),
-          color_debug_log_name(color_bg, sizeof(color_bg), cc->bg), swatch);
+      mutt_buffer_add_printf(&filebuf, "# %-30s %-8s %-8s # %s\n",
+                             color_debug_log_attrs_list(ac->attrs),
+                             color_debug_log_name(color_fg, sizeof(color_fg), cc->fg),
+                             color_debug_log_name(color_bg, sizeof(color_bg), cc->bg),
+                             swatch);
     }
   }
 
@@ -476,10 +477,11 @@ static enum CommandResult icmd_color(struct Buffer *buf, struct Buffer *s,
           continue;
 
         const char *swatch = color_debug_log_color_attrs(cc->fg, cc->bg, ac->attrs);
-        mutt_buffer_add_printf(
-            &filebuf, "# %-30s %-8s %-8s # %s\n", color_debug_log_attrs_list(ac->attrs),
-            color_debug_log_name(color_fg, sizeof(color_fg), cc->fg),
-            color_debug_log_name(color_bg, sizeof(color_bg), cc->bg), swatch);
+        mutt_buffer_add_printf(&filebuf, "# %-30s %-8s %-8s # %s\n",
+                               color_debug_log_attrs_list(ac->attrs),
+                               color_debug_log_name(color_fg, sizeof(color_fg), cc->fg),
+                               color_debug_log_name(color_bg, sizeof(color_bg), cc->bg),
+                               swatch);
       }
     }
   }

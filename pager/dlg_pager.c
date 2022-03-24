@@ -189,8 +189,7 @@ static void pager_custom_redraw(struct PagerPrivateData *priv)
   struct IndexSharedData *shared = dialog_find(priv->pview->win_pager)->wdata;
 
   const bool c_tilde = cs_subset_bool(NeoMutt->sub, "tilde");
-  const short c_pager_index_lines =
-      cs_subset_number(NeoMutt->sub, "pager_index_lines");
+  const short c_pager_index_lines = cs_subset_number(NeoMutt->sub, "pager_index_lines");
 
   if (priv->redraw & MENU_REDRAW_FULL)
   {
@@ -532,8 +531,7 @@ int mutt_pager(struct PagerView *pview)
   //===========================================================================
 
   //---------- reading config values needed now--------------------------------
-  const short c_pager_index_lines =
-      cs_subset_number(NeoMutt->sub, "pager_index_lines");
+  const short c_pager_index_lines = cs_subset_number(NeoMutt->sub, "pager_index_lines");
 
   //---------- local variables ------------------------------------------------
   int op = 0;
@@ -567,8 +565,7 @@ int mutt_pager(struct PagerView *pview)
   {
     shared->ctx->msg_in_pager = shared->email->msgno;
     priv->win_pbar->actions |= WA_RECALC;
-    const short c_pager_read_delay =
-        cs_subset_number(NeoMutt->sub, "pager_read_delay");
+    const short c_pager_read_delay = cs_subset_number(NeoMutt->sub, "pager_read_delay");
     if (c_pager_read_delay == 0)
     {
       mutt_set_flag(shared->mailbox, shared->email, MUTT_READ, true);
@@ -590,10 +587,9 @@ int mutt_pager(struct PagerView *pview)
   priv->lines_max = LINES; // number of lines on screen, from curses
   priv->lines = mutt_mem_calloc(priv->lines_max, sizeof(struct Line));
   priv->fp = fopen(pview->pdata->fname, "r");
-  priv->has_types =
-      ((pview->mode == PAGER_MODE_EMAIL) || (pview->flags & MUTT_SHOWCOLOR)) ?
-          MUTT_TYPES :
-          0; // main message or rfc822 attachment
+  priv->has_types = ((pview->mode == PAGER_MODE_EMAIL) || (pview->flags & MUTT_SHOWCOLOR)) ?
+                        MUTT_TYPES :
+                        0; // main message or rfc822 attachment
 
   for (size_t i = 0; i < priv->lines_max; i++)
   {
@@ -662,8 +658,7 @@ int mutt_pager(struct PagerView *pview)
     notify_send(priv->notify, NT_PAGER, NT_PAGER_VIEW, priv);
     window_redraw(NULL);
 
-    const bool c_braille_friendly =
-        cs_subset_bool(NeoMutt->sub, "braille_friendly");
+    const bool c_braille_friendly = cs_subset_bool(NeoMutt->sub, "braille_friendly");
     if (c_braille_friendly)
     {
       if (braille_row != -1)
@@ -758,8 +753,7 @@ int mutt_pager(struct PagerView *pview)
         const bool c_beep_new = cs_subset_bool(NeoMutt->sub, "beep_new");
         if (c_beep_new)
           mutt_beep(true);
-        const char *const c_new_mail_command =
-            cs_subset_string(NeoMutt->sub, "new_mail_command");
+        const char *const c_new_mail_command = cs_subset_string(NeoMutt->sub, "new_mail_command");
         if (c_new_mail_command)
         {
           char cmd[1024];

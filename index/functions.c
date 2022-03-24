@@ -86,8 +86,7 @@
 #include <libintl.h>
 #endif
 
-static const char *Not_available_in_this_menu =
-    N_("Not available in this menu");
+static const char *Not_available_in_this_menu = N_("Not available in this menu");
 
 /**
  * op_alias_dialog - Open the aliases dialog - Implements ::index_function_t - @ingroup index_function_api
@@ -322,8 +321,7 @@ static int op_display_message(struct IndexSharedData *shared,
   {
     mutt_uncollapse_thread(shared->email);
     mutt_set_vnum(shared->mailbox);
-    const bool c_uncollapse_jump =
-        cs_subset_bool(shared->sub, "uncollapse_jump");
+    const bool c_uncollapse_jump = cs_subset_bool(shared->sub, "uncollapse_jump");
     if (c_uncollapse_jump)
       menu_set_index(priv->menu, mutt_thread_next_unread(shared->email));
   }
@@ -567,8 +565,8 @@ static int op_forward_message(struct IndexSharedData *shared,
     if (mutt_check_traditional_pgp(shared->mailbox, &el))
       menu_queue_redraw(priv->menu, MENU_REDRAW_FULL);
   }
-  int rc =
-      mutt_send_message(SEND_FORWARD, NULL, NULL, shared->mailbox, &el, shared->sub);
+  int rc = mutt_send_message(SEND_FORWARD, NULL, NULL, shared->mailbox, &el,
+                             shared->sub);
   emaillist_clear(&el);
   menu_queue_redraw(priv->menu, MENU_REDRAW_FULL);
 
@@ -600,8 +598,8 @@ static int op_group_reply(struct IndexSharedData *shared,
     if (mutt_check_traditional_pgp(shared->mailbox, &el))
       menu_queue_redraw(priv->menu, MENU_REDRAW_FULL);
   }
-  int rc =
-      mutt_send_message(replyflags, NULL, NULL, shared->mailbox, &el, shared->sub);
+  int rc = mutt_send_message(replyflags, NULL, NULL, shared->mailbox, &el,
+                             shared->sub);
   emaillist_clear(&el);
   menu_queue_redraw(priv->menu, MENU_REDRAW_FULL);
 
@@ -807,8 +805,7 @@ static int op_main_change_folder(struct IndexSharedData *shared,
     read_only = false;
   }
 
-  const bool c_change_folder_next =
-      cs_subset_bool(shared->sub, "change_folder_next");
+  const bool c_change_folder_next = cs_subset_bool(shared->sub, "change_folder_next");
   if (c_change_folder_next && shared->mailbox &&
       !mutt_buffer_is_empty(&shared->mailbox->pathbuf))
   {
@@ -890,8 +887,7 @@ static int op_main_collapse_thread(struct IndexSharedData *shared,
   {
     int index = mutt_uncollapse_thread(shared->email);
     mutt_set_vnum(shared->mailbox);
-    const bool c_uncollapse_jump =
-        cs_subset_bool(shared->sub, "uncollapse_jump");
+    const bool c_uncollapse_jump = cs_subset_bool(shared->sub, "uncollapse_jump");
     if (c_uncollapse_jump)
       index = mutt_thread_next_unread(shared->email);
     menu_set_index(priv->menu, index);
@@ -1747,8 +1743,7 @@ static int op_mark_msg(struct IndexSharedData *shared, struct IndexPrivateData *
                                false, NULL, NULL, NULL) == 0) &&
         !mutt_buffer_is_empty(buf))
     {
-      const char *const c_mark_macro_prefix =
-          cs_subset_string(shared->sub, "mark_macro_prefix");
+      const char *const c_mark_macro_prefix = cs_subset_string(shared->sub, "mark_macro_prefix");
       char str[256];
       snprintf(str, sizeof(str), "%s%s", c_mark_macro_prefix, mutt_buffer_string(buf));
 
@@ -1941,8 +1936,8 @@ static int op_reply(struct IndexSharedData *shared, struct IndexPrivateData *pri
     if (mutt_check_traditional_pgp(shared->mailbox, &el))
       menu_queue_redraw(priv->menu, MENU_REDRAW_FULL);
   }
-  int rc =
-      mutt_send_message(SEND_REPLY, NULL, NULL, shared->mailbox, &el, shared->sub);
+  int rc = mutt_send_message(SEND_REPLY, NULL, NULL, shared->mailbox, &el,
+                             shared->sub);
   emaillist_clear(&el);
   menu_queue_redraw(priv->menu, MENU_REDRAW_FULL);
 
@@ -1995,8 +1990,10 @@ static int op_save(struct IndexSharedData *shared, struct IndexPrivateData *priv
   struct EmailList el = STAILQ_HEAD_INITIALIZER(el);
   el_add_tagged(&el, shared->ctx, shared->email, priv->tag);
 
-  const enum MessageSaveOpt save_opt =
-      ((op == OP_SAVE) || (op == OP_DECODE_SAVE) || (op == OP_DECRYPT_SAVE)) ? SAVE_MOVE : SAVE_COPY;
+  const enum MessageSaveOpt save_opt = ((op == OP_SAVE) || (op == OP_DECODE_SAVE) ||
+                                        (op == OP_DECRYPT_SAVE)) ?
+                                           SAVE_MOVE :
+                                           SAVE_COPY;
 
   enum MessageTransformOpt transform_opt =
       ((op == OP_DECODE_SAVE) || (op == OP_DECODE_COPY))   ? TRANSFORM_DECODE :
@@ -2623,8 +2620,7 @@ static int op_main_change_group(struct IndexSharedData *shared,
     read_only = false;
   }
 
-  const bool c_change_folder_next =
-      cs_subset_bool(shared->sub, "change_folder_next");
+  const bool c_change_folder_next = cs_subset_bool(shared->sub, "change_folder_next");
   if (c_change_folder_next && shared->mailbox &&
       !mutt_buffer_is_empty(&shared->mailbox->pathbuf))
   {
@@ -2633,8 +2629,7 @@ static int op_main_change_group(struct IndexSharedData *shared,
   }
 
   OptNews = true;
-  const char *const c_news_server =
-      cs_subset_string(shared->sub, "news_server");
+  const char *const c_news_server = cs_subset_string(shared->sub, "news_server");
   CurrentNewsSrv = nntp_select_server(shared->mailbox, c_news_server, false);
   if (!CurrentNewsSrv)
     goto changefoldercleanup2;
@@ -2690,17 +2685,16 @@ static int op_post(struct IndexSharedData *shared, struct IndexPrivateData *priv
   if (!shared->email)
     return FR_NO_ACTION;
 
-  const enum QuadOption c_followup_to_poster =
-      cs_subset_quad(shared->sub, "followup_to_poster");
+  const enum QuadOption c_followup_to_poster = cs_subset_quad(shared->sub, "followup_to_poster");
   if ((op != OP_FOLLOWUP) || !shared->email->env->followup_to ||
       !mutt_istr_equal(shared->email->env->followup_to, "poster") ||
-      (query_quadoption(c_followup_to_poster,
-                        _("Reply by mail as poster prefers?")) != MUTT_YES))
+      (query_quadoption(c_followup_to_poster, _("Reply by mail as poster prefers?")) != MUTT_YES))
   {
-    const enum QuadOption c_post_moderated =
-        cs_subset_quad(shared->sub, "post_moderated");
+    const enum QuadOption c_post_moderated = cs_subset_quad(shared->sub, "post_moderated");
     if (shared->mailbox && (shared->mailbox->type == MUTT_NNTP) &&
-        !((struct NntpMboxData *) shared->mailbox->mdata)->allowed && (query_quadoption(c_post_moderated, _("Posting to this group not allowed, may be moderated. Continue?")) != MUTT_YES))
+        !((struct NntpMboxData *) shared->mailbox->mdata)->allowed &&
+        (query_quadoption(c_post_moderated, _("Posting to this group not allowed, may be moderated. Continue?")) !=
+         MUTT_YES))
     {
       return FR_ERROR;
     }
@@ -2815,9 +2809,9 @@ static int op_main_vfolder_from_query(struct IndexSharedData *shared,
   char *query_unencoded = mutt_buffer_strdup(buf);
 
   mutt_buffer_alloc(buf, PATH_MAX);
-  struct Mailbox *m_query =
-      change_folder_notmuch(priv->menu, buf->data, buf->dsize, &priv->oldcount,
-                            shared, (op == OP_MAIN_VFOLDER_FROM_QUERY_READONLY));
+  struct Mailbox *m_query = change_folder_notmuch(priv->menu, buf->data, buf->dsize,
+                                                  &priv->oldcount, shared,
+                                                  (op == OP_MAIN_VFOLDER_FROM_QUERY_READONLY));
   if (m_query)
   {
     FREE(&m_query->name);
@@ -2852,8 +2846,7 @@ static int op_main_windowed_vfolder(struct IndexSharedData *shared,
     mutt_message(_("Windowed queries disabled"));
     return FR_ERROR;
   }
-  const char *const c_nm_query_window_current_search =
-      cs_subset_string(shared->sub, "nm_query_window_current_search");
+  const char *const c_nm_query_window_current_search = cs_subset_string(shared->sub, "nm_query_window_current_search");
   if (!c_nm_query_window_current_search)
   {
     mutt_message(_("No notmuch vfolder currently loaded"));
