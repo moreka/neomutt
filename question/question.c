@@ -134,8 +134,7 @@ int mutt_multi_choice(const char *prompt, const char *letters)
     ch = mutt_getch_timeout(30 * 1000);
     if (ch.op == OP_TIMEOUT)
       continue;
-    /* (ch.ch == 0) is technically possible.  Treat the same as OP_ABORT */
-    if ((ch.ch == 0) || (ch.op == OP_ABORT) || CI_is_return(ch.ch))
+    if ((ch.op == OP_NULL) || (ch.op == OP_ABORT) || CI_is_return(ch.ch))
     {
       choice = -1;
       break;
