@@ -263,6 +263,9 @@ static struct ConfigDef MainVars[] = {
   { "display_filter", DT_STRING|DT_COMMAND|R_PAGER, 0, 0, NULL,
     "External command to pre-process an email before display"
   },
+  { "dump_screen_file", DT_PATH|DT_PATH_FILE, IP "~/.neomutt-dump-screen", 0, NULL,
+    "File to save dump-screen output"
+  },
   { "duplicate_threads", DT_BOOL|R_RESORT|R_RESORT_INIT|R_INDEX, true, 0, NULL,
     "Highlight messages with duplicated message IDs"
   },
