@@ -73,5 +73,6 @@ size_t       mutt_strnwidth(const char *s, size_t len);
 void         mutt_unget_event(int ch, int op);
 void         mutt_unget_string(const char *s);
 size_t       mutt_wstr_trunc(const char *src, size_t maxlen, size_t maxwid, size_t *width);
+void         mutt_dump_screen(const char *pth);
 
 #endif /* MUTT_GUI_CURS_LIB_H */
