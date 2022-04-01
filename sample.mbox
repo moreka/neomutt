@@ -1,0 +1,910 @@
+From neomutt-devel-bounces@neomutt.org Tue Sep  1 15:22:18 2020
+Return-Path: <neomutt-devel-bounces@neomutt.org>
+X-Original-To: flatcap-mail@flatcap.org
+Delivered-To: flatcap-mail@flatcap.org
+Received: from localhost (localhost [127.0.0.1])
+	by flatcap.org (Postfix) with ESMTP id 7B849F7E
+	for <flatcap-mail@flatcap.org>; Tue,  1 Sep 2020 15:22:18 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Authentication-Results: flatcap.org (amavisd-new); dkim=neutral
+	reason="invalid (public key: not available)" header.d=flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+	by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id BQb3N1fmiIe9 for <flatcap-mail@flatcap.org>;
+	Tue,  1 Sep 2020 15:22:17 +0100 (BST)
+Received: from pferd.in-berlin.de (pferd.in-berlin.de [192.109.42.122])
+	by flatcap.org (Postfix) with ESMTP id 19249B4
+	for <rich@flatcap.org>; Tue,  1 Sep 2020 15:22:17 +0100 (BST)
+Received: from pferd.in-berlin.de (localhost [127.0.0.1])
+	by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id 081EIddx013869;
+	Tue, 1 Sep 2020 16:18:39 +0200
+X-Mailman-Handler: $Id: mm-handler 5100 2002-04-05 19:41:09Z bwarsaw $
+Received: from einhorn-in.in-berlin.de (einhorn-in.in-berlin.de
+ [192.109.42.16])
+ by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id
+ 081EIbqL013864
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel+neomutt.org@mailman1.in-berlin.de>;
+ Tue, 1 Sep 2020 16:18:37 +0200
+Received: from tamarau.in-berlin.de (tamarau.in-berlin.de [192.109.42.28])
+ by einhorn-in.in-berlin.de  with ESMTP id 081EIbM3003906
+ for <neomutt-devel@neomutt.org>; Tue, 1 Sep 2020 16:18:37 +0200
+X-Envelope-From: rich@flatcap.org
+X-Envelope-To: <neomutt-devel@neomutt.org>
+Received: from flatcap.org (flatcap.org [178.79.161.177])
+ by tamarau.in-berlin.de  with ESMTPS id 081EIXOT013546
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel@neomutt.org>; Tue, 1 Sep 2020 16:18:34 +0200
+Received: from localhost (localhost [127.0.0.1])
+ by flatcap.org (Postfix) with ESMTP id 3A059F7E
+ for <neomutt-devel@neomutt.org>; Tue,  1 Sep 2020 15:18:33 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+ by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id bq_5iDz3KdDr for <neomutt-devel@neomutt.org>;
+ Tue,  1 Sep 2020 15:18:31 +0100 (BST)
+Received: from laptop.flatcap.org (vpn10.flatcap.org [10.8.0.10])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by flatcap.org (Postfix) with ESMTPS id 1086DB4
+ for <neomutt-devel@neomutt.org>; Tue,  1 Sep 2020 15:18:30 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flatcap.org; s=mail;
+ t=1598969911; bh=w6YwgyPQMMp6hDUJUZAZKYzd8XpQy0t6m9/hO8lH+xY=;
+ h=Date:From:To:Subject:From;
+ b=I/6EqW0Qg/3rHLEdQQQ2ny9BH4YtLVGHnzz9dD1O/O86RI2DyVqkvGEzzc2/9m9df
+ VM311mdVSPxsFrVjWIxYZWaF1u5AqElFEbmSjNm9qYApjrEbCUzz1n+aC/a9mJbLM/
+ IzYBmWL89nzlu9K0DtpPASujk+ldHv1dPsDVkGKk=
+Date: Tue, 1 Sep 2020 15:18:30 +0100
+From: Richard Russon <rich@flatcap.org>
+To: Neomutt Developers <neomutt-devel@neomutt.org>
+Message-Id: <20200901141830.sqnrqzosyls3vj62@flatcap.org>
+Mail-Followup-To: Neomutt Developers <neomutt-devel@neomutt.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature"; boundary="3eu2mdce2jalea7p"
+Content-Disposition: inline
+User-Agent: NeoMutt/20200814
+Subject: [neomutt-devel] Address Sanitizer - Check for memory leaks, etc
+X-BeenThere: neomutt-devel@neomutt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Teaching an Old Dog New Tricks <neomutt-devel-neomutt.org>
+List-Unsubscribe: <https://mailman.neomutt.org/mailman/options/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=unsubscribe>
+List-Archive: <https://mailman.neomutt.org/pipermail/neomutt-devel-neomutt.org/>
+List-Post: <mailto:neomutt-devel@neomutt.org>
+List-Help: <mailto:neomutt-devel-request@neomutt.org?subject=help>
+List-Subscribe: <https://mailman.neomutt.org/mailman/listinfo/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=subscribe>
+Errors-To: neomutt-devel-bounces@neomutt.org
+Sender: "neomutt-devel" <neomutt-devel-bounces@neomutt.org>
+Status: RO
+Content-Length: 1339
+
+
+--3eu2mdce2jalea7p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+I've just created a new Analysis page for the Address Sanitizer:
+
+    https://neomutt.org/dev/analysis/asan
+
+One of the many ways in which we're working hard to make NeoMutt robust.
+
+Cheers,
+    Rich / FlatCap
+--=20
+Buy FlatCap a Beer: https://www.paypal.me/russon
+
+--3eu2mdce2jalea7p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEaa0dY2rCkuggZYwW68FQ5LXaY98FAl9OWDYACgkQ68FQ5LXa
+Y9+sghAAluTVZBGlIJnG9G+N7ZOsLivNYJ6u1ywElai9CJrNCx1H1KX+xrJyXcS1
+8tKK32JusL1CEVuAcDy8zZo78F8wjvKxRz4tFUEkRqoE9FNvR8xZ1vVVDatNR2wX
+tc6jTbCwnC1E+VkmK/6hvAJb1gVkRbKctflf0pBQkxc+fab0eMztzI3qLHzMO3gv
+ZnaozUaHGGGt0Pfce5xno9O7LNmyDjNtuyU2bGpOtv+LLdGKRx9KRiPZnF3PHm/z
+uQSPu62iRJ463NfM+ao4xhyJ/vsBMwwRsmCNS5i+SSkxFGi0RPDjbPMQcEHdcgQm
+7L0vqe+ubvswSp3ZkALXRWjBn5ywFxCZysvOpnWYTI+0WtHxciAU/eEHRLF4GH8P
+ZxurE01SCi4dKwGbpFA3wc00c+99O01ViQp4KbeDoIuKN3E/LOGZMy6+/VL43Qtk
+SbhJbBcbA0E08NC4vG8rHNnvjP7fRpdYpjqRSKTpl6D5xoJUUxfEGDDggGhoKo11
+1rsziH9fXZQvFlF39jiX/k2O8ilHuZ2fwxjWjmCuRpw07K9V8KOM2V/jJkcAY0d5
+LV0IsNuaZo4Qes7xMbAykKxSBFc3J4UlNnw7niXa2g5F7IanjMGseXnFAcuJ7iC2
+iP3VVQvhFEMCYf+/wbHnKSZnXXxkzfKp5MC+Pv36twK/r+lEIIw=
+=x2IZ
+-----END PGP SIGNATURE-----
+
+--3eu2mdce2jalea7p--
+
+From neomutt-devel-bounces@neomutt.org Wed Sep  2 03:47:22 2020
+Return-Path: <neomutt-devel-bounces@neomutt.org>
+X-Original-To: flatcap-mail@flatcap.org
+Delivered-To: flatcap-mail@flatcap.org
+Received: from localhost (localhost [127.0.0.1])
+	by flatcap.org (Postfix) with ESMTP id 5737FEA4
+	for <flatcap-mail@flatcap.org>; Wed,  2 Sep 2020 03:47:22 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+	by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id h_xOA6dxSOis for <flatcap-mail@flatcap.org>;
+	Wed,  2 Sep 2020 03:47:18 +0100 (BST)
+Received: from pferd.in-berlin.de (pferd.in-berlin.de [192.109.42.122])
+	by flatcap.org (Postfix) with ESMTP id 61DE2E77
+	for <rich@flatcap.org>; Wed,  2 Sep 2020 03:47:18 +0100 (BST)
+Received: from pferd.in-berlin.de (localhost [127.0.0.1])
+	by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id 0822hmPH018023;
+	Wed, 2 Sep 2020 04:43:48 +0200
+X-Mailman-Handler: $Id: mm-handler 5100 2002-04-05 19:41:09Z bwarsaw $
+Received: from einhorn-in.in-berlin.de (einhorn-in.in-berlin.de
+ [192.109.42.16])
+ by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id
+ 0822hlan018018
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel+neomutt.org@mailman1.in-berlin.de>;
+ Wed, 2 Sep 2020 04:43:47 +0200
+Received: from tamarau.in-berlin.de (tamarau.in-berlin.de [192.109.42.28])
+ by einhorn-in.in-berlin.de  with ESMTP id 0822hlG0020948
+ for <neomutt-devel@neomutt.org>; Wed, 2 Sep 2020 04:43:47 +0200
+X-Envelope-From: itz@very.loosely.org
+X-Envelope-To: <neomutt-devel@neomutt.org>
+Received: from very.loosely.org (very.loosely.org [173.255.215.69])
+ by tamarau.in-berlin.de  with ESMTPS id 0822hgDn022063
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel@neomutt.org>; Wed, 2 Sep 2020 04:43:44 +0200
+Received: from c-67-174-233-217.hsd1.ca.comcast.net ([67.174.233.217]:49354
+ helo=foolinux.mooo.com)
+ by ahiker.mooo.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+ (Exim 4.94-29-75670126c) (envelope-from <itz@very.loosely.org>)
+ id 1kDIkO-000753-ID
+ for neomutt-devel@neomutt.org; Tue, 01 Sep 2020 19:43:40 -0700
+Date: Tue, 1 Sep 2020 19:43:31 -0700
+From: Ian Zimmerman <itz@very.loosely.org>
+To: neomutt-devel@neomutt.org
+Message-ID: <20200902024331.ymkdyivu2hxpanon@matica.foolinux.mooo.com>
+References: <20200901141830.sqnrqzosyls3vj62@flatcap.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901141830.sqnrqzosyls3vj62@flatcap.org>
+Subject: Re: [neomutt-devel] Address Sanitizer - Check for memory leaks, etc
+X-BeenThere: neomutt-devel@neomutt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Teaching an Old Dog New Tricks <neomutt-devel-neomutt.org>
+List-Unsubscribe: <https://mailman.neomutt.org/mailman/options/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=unsubscribe>
+List-Archive: <https://mailman.neomutt.org/pipermail/neomutt-devel-neomutt.org/>
+List-Post: <mailto:neomutt-devel@neomutt.org>
+List-Help: <mailto:neomutt-devel-request@neomutt.org?subject=help>
+List-Subscribe: <https://mailman.neomutt.org/mailman/listinfo/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=subscribe>
+Errors-To: neomutt-devel-bounces@neomutt.org
+Sender: "neomutt-devel" <neomutt-devel-bounces@neomutt.org>
+Status: RO
+X-Status: A
+Content-Length: 416
+
+On 2020-09-01 15:18, Richard Russon wrote:
+
+>     https://neomutt.org/dev/analysis/asan
+> 
+> One of the many ways in which we're working hard to make NeoMutt
+> robust.
+
+Just apropos, I had some success detecting memory problems by running
+neomutt under valgrind. If there is interest I could write up a short
+neomutt specific howto, but I'm not sure it would add much value over
+the valgrind documentation.
+
+-- 
+Ian
+
+From rich@flatcap.org Wed Sep  2 10:04:40 2020
+Date: Wed, 2 Sep 2020 10:04:40 +0100
+From: Richard Russon <rich@flatcap.org>
+To: neomutt-devel@neomutt.org
+Subject: Re: [neomutt-devel] Address Sanitizer - Check for memory leaks, etc
+Message-ID: <20200902090440.x4hl44e7czp53q7s@laptop.flatcap.org>
+Mail-Followup-To: neomutt-devel@neomutt.org
+References: <20200901141830.sqnrqzosyls3vj62@flatcap.org>
+ <20200902024331.ymkdyivu2hxpanon@matica.foolinux.mooo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902024331.ymkdyivu2hxpanon@matica.foolinux.mooo.com>
+User-Agent: NeoMutt/20200814
+Status: RO
+Content-Length: 589
+
+Hi Ian,
+
+> > https://neomutt.org/dev/analysis/asan
+
+> I had some success detecting memory problems by running neomutt under valgrind.
+
+Yep, me too.  Though I often found that it was too good -- finding leaks
+deep within libraries that I couldn't hope to address.
+
+> If there is interest I could write up a short neomutt specific howto,
+
+Yes please.  I already have a basic Valgrind page...
+
+     https://neomutt.org/dev/analysis/valgrind
+
+but it's always hard to know what to write.
+Anything you can add, to make it easier/clearer would be much appreciated :-)
+
+Cheers,
+    Rich / FlatCap
+
+From neomutt-devel-bounces@neomutt.org Wed Sep  2 10:08:22 2020
+Return-Path: <neomutt-devel-bounces@neomutt.org>
+X-Original-To: flatcap-mail@flatcap.org
+Delivered-To: flatcap-mail@flatcap.org
+Received: from localhost (localhost [127.0.0.1])
+	by flatcap.org (Postfix) with ESMTP id BD6B0EA4
+	for <flatcap-mail@flatcap.org>; Wed,  2 Sep 2020 10:08:22 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Authentication-Results: flatcap.org (amavisd-new); dkim=neutral
+	reason="invalid (public key: not available)" header.d=flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+	by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Ss6QHP-viqJq for <flatcap-mail@flatcap.org>;
+	Wed,  2 Sep 2020 10:08:21 +0100 (BST)
+Received: from pferd.in-berlin.de (pferd.in-berlin.de [192.109.42.122])
+	by flatcap.org (Postfix) with ESMTP id 19EB8E77
+	for <rich@flatcap.org>; Wed,  2 Sep 2020 10:08:21 +0100 (BST)
+Received: from pferd.in-berlin.de (localhost [127.0.0.1])
+	by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id 08294nVR019532;
+	Wed, 2 Sep 2020 11:04:49 +0200
+X-Mailman-Handler: $Id: mm-handler 5100 2002-04-05 19:41:09Z bwarsaw $
+Received: from einhorn-in.in-berlin.de (einhorn-in.in-berlin.de
+ [192.109.42.16])
+ by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id
+ 08294mRv019527
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel+neomutt.org@mailman1.in-berlin.de>;
+ Wed, 2 Sep 2020 11:04:48 +0200
+Received: from tamarau.in-berlin.de (tamarau.in-berlin.de [192.109.42.28])
+ by einhorn-in.in-berlin.de  with ESMTP id 08294mhH028063
+ for <neomutt-devel@neomutt.org>; Wed, 2 Sep 2020 11:04:48 +0200
+X-Envelope-From: rich@flatcap.org
+X-Envelope-To: <neomutt-devel@neomutt.org>
+Received: from flatcap.org (flatcap.org [178.79.161.177])
+ by tamarau.in-berlin.de  with ESMTPS id 08294ivi003419
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel@neomutt.org>; Wed, 2 Sep 2020 11:04:45 +0200
+Received: from localhost (localhost [127.0.0.1])
+ by flatcap.org (Postfix) with ESMTP id C9FA1EA4
+ for <neomutt-devel@neomutt.org>; Wed,  2 Sep 2020 10:04:43 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+ by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id EDIhTW2EYy6E for <neomutt-devel@neomutt.org>;
+ Wed,  2 Sep 2020 10:04:40 +0100 (BST)
+Received: from laptop.flatcap.org (vpn10.flatcap.org [10.8.0.10])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by flatcap.org (Postfix) with ESMTPS id D08E0E77
+ for <neomutt-devel@neomutt.org>; Wed,  2 Sep 2020 10:04:40 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flatcap.org; s=mail;
+ t=1599037480; bh=6hRL1wsFDQP7VaGIJwSLgIXyhXOpbY1ptU4yODVvbhw=;
+ h=Date:From:To:Subject:References:In-Reply-To:From;
+ b=fY2WlNghmZmejEHx4GCrT/p+pD2m8lHV6Do+lro/Y16YLPQhr6Qm7wJhslawvVPi/
+ U+ciWLRXeMtExVwmVpxgoUFA9GTV7PkeLagag7glqJGZC7OkoNA++lqbxh7DUQuwIS
+ 0VpmObdh+MPegV68CihwB1VLJJTrfvxIcpBEB2j8=
+Date: Wed, 2 Sep 2020 10:04:40 +0100
+From: Richard Russon <rich@flatcap.org>
+To: neomutt-devel@neomutt.org
+Message-Id: <20200902090440.x4hl44e7czp53q7s@flatcap.org>
+Mail-Followup-To: neomutt-devel@neomutt.org
+References: <20200901141830.sqnrqzosyls3vj62@flatcap.org>
+ <20200902024331.ymkdyivu2hxpanon@matica.foolinux.mooo.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature"; boundary="o6y5btsnqgn242y5"
+Content-Disposition: inline
+In-Reply-To: <20200902024331.ymkdyivu2hxpanon@matica.foolinux.mooo.com>
+User-Agent: NeoMutt/20200814
+Subject: Re: [neomutt-devel] Address Sanitizer - Check for memory leaks, etc
+X-BeenThere: neomutt-devel@neomutt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Teaching an Old Dog New Tricks <neomutt-devel-neomutt.org>
+List-Unsubscribe: <https://mailman.neomutt.org/mailman/options/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=unsubscribe>
+List-Archive: <https://mailman.neomutt.org/pipermail/neomutt-devel-neomutt.org/>
+List-Post: <mailto:neomutt-devel@neomutt.org>
+List-Help: <mailto:neomutt-devel-request@neomutt.org?subject=help>
+List-Subscribe: <https://mailman.neomutt.org/mailman/listinfo/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=subscribe>
+Errors-To: neomutt-devel-bounces@neomutt.org
+Sender: "neomutt-devel" <neomutt-devel-bounces@neomutt.org>
+Status: RO
+Content-Length: 1619
+
+
+--o6y5btsnqgn242y5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Ian,
+
+> > https://neomutt.org/dev/analysis/asan
+
+> I had some success detecting memory problems by running neomutt under valgrind.
+
+Yep, me too.  Though I often found that it was too good -- finding leaks
+deep within libraries that I couldn't hope to address.
+
+> If there is interest I could write up a short neomutt specific howto,
+
+Yes please.  I already have a basic Valgrind page...
+
+     https://neomutt.org/dev/analysis/valgrind
+
+but it's always hard to know what to write.
+Anything you can add, to make it easier/clearer would be much appreciated :-)
+
+Cheers,
+    Rich / FlatCap
+
+--o6y5btsnqgn242y5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEaa0dY2rCkuggZYwW68FQ5LXaY98FAl9PYCgACgkQ68FQ5LXa
+Y99vGxAAgmY5wIqf7RZeJZ7PhCAbx27KJyGi3S/y9Fowav+ECu+uBcSF6sthUFUj
+pzTdCHkpe823QzugbzURfz8YzPQay1ersyfVUWKjefMu6162hYiur50VnyD4bCEb
+EvU/CPV7W67e0EamHolOUMsSH4owH4Iz+YkRglCI0LrIlu5ITwtA6aJ6jrQVJxAl
+hioiLjunLvlSsk4NR+b8kMLu4CLVdjQad8uXC1UKH6HH4+jKlaqfgN2Rzbf7VErl
+VXZphSjvRrRrgZWpq/wVZ6EU8kRg77S9m3bUdzmqVdEh87Aj8F/lYUa6PH0L3SVw
+disAJqOLsH+hjCH3xLHlMYVwYeb9P7gPoaxzLgsLQ0aCWyuxXwkXr8mHxPm8RcXw
+yC632EPHRL92X4qLRywUKgXqbUlT+kaChyp6RcuSeO9tsHFHwrv3Se6eRxf8eCuz
+bWn/3sfMqg6SgDIRibNTL3FHS1Xrd0MreoWoYkEncE4vITV/jEzotN4ZPuJYFSKA
+2RQgTbkKmR/EUENbJdf/Jp5qti8lUbOQQ3EWg7pDvsAN2L4WL3b4ReOuZmuflN7N
+d9lJkgDdcOxG/jvdLUsmxejwLfS1WbWlQU6/ilqPjAVNP4mf1qaC67JguRIBZxJV
+A2trorjh4iTNAcBQKgSimTM3onlNmH/Rs6dq0B5BXcWiFGjDRbU=
+=GisR
+-----END PGP SIGNATURE-----
+
+--o6y5btsnqgn242y5--
+
+From neomutt-devel-bounces@neomutt.org Mon Sep 14 12:57:05 2020
+Return-Path: <neomutt-devel-bounces@neomutt.org>
+X-Original-To: flatcap-mail@flatcap.org
+Delivered-To: flatcap-mail@flatcap.org
+Received: from localhost (localhost [127.0.0.1])
+	by flatcap.org (Postfix) with ESMTP id C49DA2E8
+	for <flatcap-mail@flatcap.org>; Mon, 14 Sep 2020 12:57:05 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Authentication-Results: flatcap.org (amavisd-new); dkim=neutral
+	reason="invalid (public key: not available)" header.d=flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+	by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id OdDN7CqrZZj8 for <flatcap-mail@flatcap.org>;
+	Mon, 14 Sep 2020 12:57:05 +0100 (BST)
+Received: from pferd.in-berlin.de (pferd.in-berlin.de [192.109.42.122])
+	by flatcap.org (Postfix) with ESMTP id E753E8D
+	for <rich@flatcap.org>; Mon, 14 Sep 2020 12:57:04 +0100 (BST)
+Received: from pferd.in-berlin.de (localhost [127.0.0.1])
+	by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id 08EBrRix018017;
+	Mon, 14 Sep 2020 13:53:27 +0200
+X-Mailman-Handler: $Id: mm-handler 5100 2002-04-05 19:41:09Z bwarsaw $
+Received: from einhorn-in.in-berlin.de (einhorn-in.in-berlin.de
+ [192.109.42.16])
+ by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id
+ 08EBrPlp018012
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel+neomutt.org@mailman1.in-berlin.de>;
+ Mon, 14 Sep 2020 13:53:25 +0200
+Received: from tamarau.in-berlin.de (tamarau.in-berlin.de [192.109.42.28])
+ by einhorn-in.in-berlin.de  with ESMTP id 08EBrPm0017006
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 13:53:25 +0200
+X-Envelope-From: rich@flatcap.org
+X-Envelope-To: <neomutt-devel@neomutt.org>
+Received: from flatcap.org (flatcap.org [178.79.161.177])
+ by tamarau.in-berlin.de  with ESMTPS id 08EBrKNR021741
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 13:53:23 +0200
+Received: from localhost (localhost [127.0.0.1])
+ by flatcap.org (Postfix) with ESMTP id 1F3472E8
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 12:53:20 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+ by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 6UWiTBHc13CF for <neomutt-devel@neomutt.org>;
+ Mon, 14 Sep 2020 12:53:19 +0100 (BST)
+Received: from laptop.flatcap.org (vpn10.flatcap.org [10.8.0.10])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by flatcap.org (Postfix) with ESMTPS id 621268D
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 12:53:19 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flatcap.org; s=mail;
+ t=1600084399; bh=ZKtQYFNfKP5tNKHZ4G8trkvV8vy6ldXD68qsu+E5L84=;
+ h=Date:From:To:Subject:From;
+ b=YVkXUe+ZQ+I06EAthkxhR6VDZPDErJDtuoPY9iSScgYqBuVvvyoBD3gwV2AJaCZPC
+ 0lVm5inXwvvoBGFckbc7K7gonIeAPAHE38r2odkhnYghZp8MUsTIS9xv17YOgmSg1+
+ WcZsl5PgKme3qBfjEW4Mypez9hhTkCE0XfI9JuCE=
+Date: Mon, 14 Sep 2020 12:53:18 +0100
+From: Richard Russon <rich@flatcap.org>
+To: Neomutt Developers <neomutt-devel@neomutt.org>
+Message-Id: <20200914115318.bhr7yj6km3bjkwbx@flatcap.org>
+Mail-Followup-To: Neomutt Developers <neomutt-devel@neomutt.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature"; boundary="3gbv3cvaqnpr72ng"
+Content-Disposition: inline
+User-Agent: NeoMutt/20200821
+Subject: [neomutt-devel] Our IRC Bot is dead -- Can you help?
+X-BeenThere: neomutt-devel@neomutt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Teaching an Old Dog New Tricks <neomutt-devel-neomutt.org>
+List-Unsubscribe: <https://mailman.neomutt.org/mailman/options/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=unsubscribe>
+List-Archive: <https://mailman.neomutt.org/pipermail/neomutt-devel-neomutt.org/>
+List-Post: <mailto:neomutt-devel@neomutt.org>
+List-Help: <mailto:neomutt-devel-request@neomutt.org?subject=help>
+List-Subscribe: <https://mailman.neomutt.org/mailman/listinfo/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=subscribe>
+Errors-To: neomutt-devel-bounces@neomutt.org
+Sender: "neomutt-devel" <neomutt-devel-bounces@neomutt.org>
+Status: RO
+Content-Length: 1512
+
+
+--3gbv3cvaqnpr72ng
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi All,
+
+Our poor old IRC Bot is dead.
+It ran on Python2 but my server doesn't support that any more.
+
+    https://github.com/neomutt/botty
+
+Could you help create a modern replacement?  (in Python, Ruby, ...)
+
+It shouldn't be a big job.  The bot listened in #neomutt for issue/pr
+numbers like '#1234'.  It responded by looking up the page and replying
+in-channel with the title and url of the issue.
+
+It's a simple thing, but very useful.
+
+Can you help?
+
+Cheers,
+    Rich / FlatCap
+
+--3gbv3cvaqnpr72ng
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEaa0dY2rCkuggZYwW68FQ5LXaY98FAl9fWa4ACgkQ68FQ5LXa
+Y9+/6hAAp1ETJmg1uUUy1pHX4oCyPALOEUG7Pqgruvy0r2IUVYRXYoqzkMieRidZ
+9cuzRm48K8cqRV9czBufskOWRBDV65uW/md4o34W/qoUBAKZq/eHcgN0NPWLBC59
+ONCmZ9Z+0fWSYMNZW/mLZmNmNoer9ha1tRHkIM/J2CshCzPrdt2aJFeXTYbePLgD
+/lGg7POjEA07Tzp6ewSz+IwP99bZBlGZLkE71YGgZsmYN2dWBpyHHkYeoAOsZtSv
+3/vy1v8UaJEyYRNxKrhrrNKXrl46fjyvx12s34mrG4g7nnzf++zjrg9zJQ63inHX
+3LhFOZ0lWuT0ZufVkuTUshNSVfbbRtggJuxua5tkGGzlodOI5VOTtVRlm0lVvJnA
+xGCjOW3jHtZzHUpaEWQtQZBLMJOGV2ReDgC7rESfiDnzDo35E857TmhBcQO++ju0
+vynt4Yse2ZSWkixw4dftduEpFpw9EQsyR8HSNE7U2kuCVqEdlL9pgZI+Q88DcAMF
+aA+IsTSdJMgh7zqNRnIEUv8G2bCKRlCCqMOSK3XBHV2YvY3AkUc/fwIe6j9Q5AqO
+qIgmYvQrNBSpWY6tOS0EtsDxJgd0/qlpbxKhQZKz6Ajio9YSB45zhEGla3QtBcSE
+Z8WpIDfx00hEXFffsBuvMXyLoe7wwToHWPEAqjIxW2KO0pWCJTw=
+=pMlX
+-----END PGP SIGNATURE-----
+
+--3gbv3cvaqnpr72ng--
+
+From neomutt-devel-bounces@neomutt.org Mon Sep 14 13:08:34 2020
+Return-Path: <neomutt-devel-bounces@neomutt.org>
+X-Original-To: flatcap-mail@flatcap.org
+Delivered-To: flatcap-mail@flatcap.org
+Received: from localhost (localhost [127.0.0.1])
+	by flatcap.org (Postfix) with ESMTP id 7DD432E8
+	for <flatcap-mail@flatcap.org>; Mon, 14 Sep 2020 13:08:34 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Authentication-Results: flatcap.org (amavisd-new); dkim=pass (2048-bit key)
+	header.d=thomas-sanchez.me
+Received: from flatcap.org ([127.0.0.1])
+	by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id PtgZnAOKO6yl for <flatcap-mail@flatcap.org>;
+	Mon, 14 Sep 2020 13:08:33 +0100 (BST)
+Received: from pferd.in-berlin.de (pferd.in-berlin.de [192.109.42.122])
+	by flatcap.org (Postfix) with ESMTP id 4C5BE8D
+	for <rich@flatcap.org>; Mon, 14 Sep 2020 13:08:33 +0100 (BST)
+Received: from pferd.in-berlin.de (localhost [127.0.0.1])
+	by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id 08EC54Kg019106;
+	Mon, 14 Sep 2020 14:05:04 +0200
+X-Mailman-Handler: $Id: mm-handler 5100 2002-04-05 19:41:09Z bwarsaw $
+Received: from einhorn-in.in-berlin.de (einhorn-in.in-berlin.de
+ [192.109.42.16])
+ by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id
+ 08EC0wH0018626
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel+neomutt.org@mailman1.in-berlin.de>;
+ Mon, 14 Sep 2020 14:00:58 +0200
+Received: from tamarau.in-berlin.de (tamarau.in-berlin.de [192.109.42.28])
+ by einhorn-in.in-berlin.de  with ESMTP id 08EC0wOA020177
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 14:00:58 +0200
+X-Envelope-From: ts@thomas-sanchez.me
+X-Envelope-To: <neomutt-devel@neomutt.org>
+Received: from mailbox.thomas-sanchez.me (mailbox.thomas-sanchez.me
+ [161.35.71.246])
+ by tamarau.in-berlin.de  with ESMTPS id 08EC0saw023261
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 14:00:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thomas-sanchez.me;
+ s=excision; t=1600084850;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:mime-version:mime-version:content-type:content-type:
+ in-reply-to:in-reply-to:references:references;
+ bh=vOP8wOcOfpqh01trZFhdawLVH3zpTtBHUW1JjbyUxZM=;
+ b=JkKD/dGoznyABAE7+CBFXD0bK7wNFYg8vgLNcGW4SNEzNaqm5HuYPkmnC8q10no0jzSXXJ
+ ZhFWcLuYJ9Vc0Tn6x7suCiCyk4KKSmVJSMurqa6JMhqqGcKriaZPQJZ87MVWv8Bw8QbELj
+ D24LulMQ6Am6r7F3Nf1MxGrs2gLZ69UU8RNTzdmlG0KSOZ/B2+U/a1SJv1FMbXevfCg/Kc
+ dS0sRuBIBlob+z9RaH/GWd8cMWi0MT9ZX7n7Q6jPZX1IXhy0iXVqyzikqPkqk+ZJPcgnru
+ ynxYbnWpkDejD3UmO2mZPZSqZFaJpaArwfyaOroEFDFRcdTdF1cyohZsaUmjXQ==
+Received: from localhost (82-64-138-77.subs.proxad.net [82.64.138.77])
+ by mailbox.thomas-sanchez.me (OpenSMTPD) with ESMTPSA id 2bb53505
+ (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO) auth=yes
+ user=ts@thomas-sanchez.me for <neomutt-devel@neomutt.org>;
+ Mon, 14 Sep 2020 12:00:50 +0000 (UTC)
+Date: Mon, 14 Sep 2020 14:00:48 +0200
+From: Thomas Sanchez <ts@thomas-sanchez.me>
+To: Neomutt Developers <neomutt-devel@neomutt.org>
+Message-ID: <20200914120048.wzsseolbwmckplhg@thomas-sanchez.me>
+References: <20200914115318.bhr7yj6km3bjkwbx@flatcap.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature"; boundary="k3o3ha5e7rbnchey"
+Content-Disposition: inline
+In-Reply-To: <20200914115318.bhr7yj6km3bjkwbx@flatcap.org>
+X-Mailman-Approved-At: Mon, 14 Sep 2020 14:05:02 +0200
+Subject: Re: [neomutt-devel] Our IRC Bot is dead -- Can you help?
+X-BeenThere: neomutt-devel@neomutt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Teaching an Old Dog New Tricks <neomutt-devel-neomutt.org>
+List-Unsubscribe: <https://mailman.neomutt.org/mailman/options/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=unsubscribe>
+List-Archive: <https://mailman.neomutt.org/pipermail/neomutt-devel-neomutt.org/>
+List-Post: <mailto:neomutt-devel@neomutt.org>
+List-Help: <mailto:neomutt-devel-request@neomutt.org?subject=help>
+List-Subscribe: <https://mailman.neomutt.org/mailman/listinfo/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=subscribe>
+Errors-To: neomutt-devel-bounces@neomutt.org
+Sender: "neomutt-devel" <neomutt-devel-bounces@neomutt.org>
+Status: RO
+X-Status: A
+Content-Length: 5742
+
+
+--k3o3ha5e7rbnchey
+Content-Type: multipart/mixed; boundary="rmtjlfcjv5hzypyr"
+Content-Disposition: inline
+
+
+--rmtjlfcjv5hzypyr
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Sep 14, 2020 at 12:53:18PM +0100, Richard Russon wrote:
+>Hi All,
+>
+>Our poor old IRC Bot is dead.
+>It ran on Python2 but my server doesn't support that any more.
+>
+>    https://github.com/neomutt/botty
+>
+>Could you help create a modern replacement?  (in Python, Ruby, ...)
+>
+>It shouldn't be a big job.  The bot listened in #neomutt for issue/pr
+>numbers like '#1234'.  It responded by looking up the page and replying
+>in-channel with the title and url of the issue.
+>
+>It's a simple thing, but very useful.
+>
+>Can you help?
+
+I've ran 2to3.py on it and seems to work to update the code.
+I don't have the permission to push a branch but here is the patch I've=20
+generated using:
+
+     2to3 -w botty.py
+
+Cheers
+
+--=20
+Thomas Sanchez
+
+--rmtjlfcjv5hzypyr
+Content-Type: text/x-python; charset=utf-8
+Content-Disposition: attachment; filename="botty.patch"
+Content-Transfer-Encoding: quoted-printable
+
+commit 67a153cabff7419e9762e05b76090f3276fc0bdc
+Author: Thomas Sanchez <thomas.sanchz@gmail.com>
+Date:   Mon Sep 14 13:58:41 2020 +0200
+
+    apply 2to3 to source
+
+diff --git a/botty.py b/botty.py
+index cb73a72..739cc6e 100755
+--- a/botty.py
++++ b/botty.py
+@@ -38,7 +38,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
+     def __init__(self, channel, nickname, server, port, user, repo, max_ag=
+e):
+         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickna=
+me, nickname)
+         self.channel =3D channel
+-        self.issue_re =3D re.compile(ur'(?:^|\s|pr|issue|(?:(?P<user>[\w\.=
+\-]+)/)?(?P<repo>[\w\.\-]+))?\#(?P<num>[0-9]+)\b', re.I)
++        self.issue_re =3D re.compile(r'(?:^|\s|pr|issue|(?:(?P<user>[\w\.\=
+-]+)/)?(?P<repo>[\w\.\-]+))?\#(?P<num>[0-9]+)\b', re.I)
+         self.user =3D user
+         self.repo =3D repo
+         self.max_age =3D timedelta(days=3Dmax_age)
+@@ -94,36 +94,36 @@ class TestBot(irc.bot.SingleServerIRCBot):
+                 time.sleep(delay)
+=20
+     def check_num(self, c, num, user, repo, force):
+-        if user =3D=3D u'':
++        if user =3D=3D '':
+             user =3D self.user
+-        if repo =3D=3D u'':
++        if repo =3D=3D '':
+             repo =3D self.repo
+=20
+-        url =3D u'https://github.com/' + user + u'/' + repo + u'/issues/' =
++ num
++        url =3D 'https://github.com/' + user + '/' + repo + '/issues/' + n=
+um
+         req =3D requests.get(url)
+         if req.status_code =3D=3D 200:
+             content =3D html.fromstring(req.content)
+=20
+             date =3D content.xpath('//h3[@class=3D"timeline-comment-header=
+-text f5 text-normal"]/a[@class=3D"link-gray js-timestamp"]/relative-time')=
+[0].attrib['datetime']
+-            print date
++            print(date)
+             date =3D datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ')
+=20
+             title =3D content.xpath('//span[@class=3D"js-issue-title"]/tex=
+t()')[0].strip()
+-            print title
++            print(title)
+=20
+             val =3D req.url.split('/')[5]
+-            if val =3D=3D u'pull':
+-                val =3D u'PR "' + title + u'": '
+-            elif val =3D=3D u'issues':
+-                val =3D u'Issue "' + title + u'": '
++            if val =3D=3D 'pull':
++                val =3D 'PR "' + title + '": '
++            elif val =3D=3D 'issues':
++                val =3D 'Issue "' + title + '": '
+             else:
+-                val +=3D u' "' + title + u'": '
++                val +=3D ' "' + title + '": '
+=20
+             if force or date + self.max_age > datetime.now():
+-                print "SENT: " + val + req.url
++                print("SENT: " + val + req.url)
+                 c.privmsg(self.channel, val + req.url)
+             else:
+-                print "NOT SENT:" + val + req.url
++                print("NOT SENT:" + val + req.url)
+=20
+ def main():
+     import sys
+@@ -136,8 +136,8 @@ def main():
+     parser.add_argument('nickname', help=3D'nickname to use')
+=20
+     parser.add_argument('-p', '--port', help=3D'port of the IRC server', t=
+ype=3Dint, default=3D6667)
+-    parser.add_argument('-u', '--user', help=3D'default github user', defa=
+ult=3Du'neomutt')
+-    parser.add_argument('-r', '--repo', help=3D'default github repository'=
+, default=3Du'neomutt')
++    parser.add_argument('-u', '--user', help=3D'default github user', defa=
+ult=3D'neomutt')
++    parser.add_argument('-r', '--repo', help=3D'default github repository'=
+, default=3D'neomutt')
+     parser.add_argument('-m', '--max_age', help=3D'only show issues less t=
+han MAX_AGE days old', type=3Dint, default=3D365)
+=20
+     args =3D parser.parse_args()
+
+--rmtjlfcjv5hzypyr--
+
+--k3o3ha5e7rbnchey
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEoFesE+2ODLjKoUm0/fzPBmg32RIFAl9fW3AACgkQ/fzPBmg3
+2RLZ6hAAk7CZSbY/6MDE84SA5N8ddINDygl/ymFfP3mVecojSrn1vtJorHWCKE40
+RaNG9ApxIMD5FWGeZU/Z2qNOsfWNakeOOtETQeuOg5ijFDWmvV8ZuTh8uPIweOKl
+IIr3Oau3m3tGyDP2PlpITW8b/peRfaCsJSbzagfp3XvZ70PenVu0OY958Rw7Ym+w
+7yyXWvkPMkxaLHdmPvv4kJd2psT914BbJIn2aztZ2m0EWuXSUJaTywYUyu+ZUTJp
+92uAVyyZ/EJCrcOFgwTYt9o3RwxcPxRhAEfZkeLc5y7O0IAjdqz4xzhZOI/JWtqa
+6HRXsJ42Ov0IG2ZGoh2WU9PzFvbjQNoYBBQMz+s21AZ9zE4w+3oUnnImatZT/zVY
+jDaBEP6QFChnHBgH95zze4jyVAuzuUc70MyyoS7cgsud3Qd8V0KCT4G3n76UhHK7
+mFdTFPnUWMP/gLdFxKulR7QT04MPuBV7cq+vDcuAOxG3vJZmdcK/7XYBZ5rtokY5
+kCxx/8WzXu9BVQL716DY6ANIZ/9QiPdDG+sfrmbyC5LE9lPeV8aJnru7E9FKPcXh
+M7wtxYfqlnt8iVtCArdcIysKwBrNUVVIdXrjo5Dydnefs6SEjR7N7BOD5R35meug
+IxDYMKVFM7HU+cPqxf3IxgQlQoB1M9UrresyOpZIncOs6MaanrU=
+=6k+A
+-----END PGP SIGNATURE-----
+
+--k3o3ha5e7rbnchey--
+
+From rich@flatcap.org Mon Sep 14 13:22:31 2020
+Date: Mon, 14 Sep 2020 13:22:31 +0100
+From: Richard Russon <rich@flatcap.org>
+To: neomutt-devel@neomutt.org
+Subject: Re: [neomutt-devel] Our IRC Bot is dead -- Can you help?
+Message-ID: <20200914122230.qmn5pm3bfbpryucl@laptop.flatcap.org>
+Mail-Followup-To: neomutt-devel@neomutt.org
+References: <20200914115318.bhr7yj6km3bjkwbx@flatcap.org>
+ <20200914120048.wzsseolbwmckplhg@thomas-sanchez.me>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200914120048.wzsseolbwmckplhg@thomas-sanchez.me>
+User-Agent: NeoMutt/20200821
+Status: RO
+Content-Length: 132
+
+Hi Thomas,
+
+> I've ran 2to3.py on it and seems to work to update the code.
+
+Thanks, that did the trick.
+Botty lives!
+
+Thanks!
+
+Rich
+
+From neomutt-devel-bounces@neomutt.org Mon Sep 14 13:26:06 2020
+Return-Path: <neomutt-devel-bounces@neomutt.org>
+X-Original-To: flatcap-mail@flatcap.org
+Delivered-To: flatcap-mail@flatcap.org
+Received: from localhost (localhost [127.0.0.1])
+	by flatcap.org (Postfix) with ESMTP id 759A12E8
+	for <flatcap-mail@flatcap.org>; Mon, 14 Sep 2020 13:26:06 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Authentication-Results: flatcap.org (amavisd-new); dkim=neutral
+	reason="invalid (public key: not available)" header.d=flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+	by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id nFheRd06TsO2 for <flatcap-mail@flatcap.org>;
+	Mon, 14 Sep 2020 13:26:02 +0100 (BST)
+Received: from pferd.in-berlin.de (pferd.in-berlin.de [192.109.42.122])
+	by flatcap.org (Postfix) with ESMTP id 91BD28D
+	for <rich@flatcap.org>; Mon, 14 Sep 2020 13:26:01 +0100 (BST)
+Received: from pferd.in-berlin.de (localhost [127.0.0.1])
+	by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id 08ECMbcq023338;
+	Mon, 14 Sep 2020 14:22:37 +0200
+X-Mailman-Handler: $Id: mm-handler 5100 2002-04-05 19:41:09Z bwarsaw $
+Received: from einhorn-in.in-berlin.de (einhorn-in.in-berlin.de
+ [192.109.42.16])
+ by pferd.in-berlin.de (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id
+ 08ECMaTR023333
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel+neomutt.org@mailman1.in-berlin.de>;
+ Mon, 14 Sep 2020 14:22:36 +0200
+Received: from tamarau.in-berlin.de (tamarau.in-berlin.de [192.109.42.28])
+ by einhorn-in.in-berlin.de  with ESMTP id 08ECMaOG030147
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 14:22:36 +0200
+X-Envelope-From: rich@flatcap.org
+X-Envelope-To: <neomutt-devel@neomutt.org>
+Received: from flatcap.org (flatcap.org [178.79.161.177])
+ by tamarau.in-berlin.de  with ESMTPS id 08ECMXWX028469
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 14:22:34 +0200
+Received: from localhost (localhost [127.0.0.1])
+ by flatcap.org (Postfix) with ESMTP id 9E0332E8
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 13:22:32 +0100 (BST)
+X-Virus-Scanned: amavisd-new at flatcap.org
+Received: from flatcap.org ([127.0.0.1])
+ by localhost (flatcap.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id H2Fe-Ndj8Yb7 for <neomutt-devel@neomutt.org>;
+ Mon, 14 Sep 2020 13:22:31 +0100 (BST)
+Received: from laptop.flatcap.org (vpn10.flatcap.org [10.8.0.10])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by flatcap.org (Postfix) with ESMTPS id 0FCBD8D
+ for <neomutt-devel@neomutt.org>; Mon, 14 Sep 2020 13:22:30 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flatcap.org; s=mail;
+ t=1600086151; bh=LE8T1eky30WPUv1RvtTnR/WCT8t9CJr67BsYg5dAYag=;
+ h=Date:From:To:Subject:References:In-Reply-To:From;
+ b=S+jDT9255USRVAf/HGItndzKKyx5Ux9DpBJb8eVxMukSimYnaVJm4G4O2vgNZyoQf
+ w2yyIxQ6vLFydNp5I4t5YgUWQYwYyql3jPiaiLkN5oyEEV3zJFGj1tMcMGdeJg5bfy
+ 50vUEoaCRjQB2XLlYMTZnDgHfupqpCxYVOxoEkjw=
+Date: Mon, 14 Sep 2020 13:22:30 +0100
+From: Richard Russon <rich@flatcap.org>
+To: neomutt-devel@neomutt.org
+Message-Id: <20200914122230.qmn5pm3bfbpryucl@flatcap.org>
+Mail-Followup-To: neomutt-devel@neomutt.org
+References: <20200914115318.bhr7yj6km3bjkwbx@flatcap.org>
+ <20200914120048.wzsseolbwmckplhg@thomas-sanchez.me>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature"; boundary="xccx6jkigxzwzbz3"
+Content-Disposition: inline
+In-Reply-To: <20200914120048.wzsseolbwmckplhg@thomas-sanchez.me>
+User-Agent: NeoMutt/20200821
+Subject: Re: [neomutt-devel] Our IRC Bot is dead -- Can you help?
+X-BeenThere: neomutt-devel@neomutt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Teaching an Old Dog New Tricks <neomutt-devel-neomutt.org>
+List-Unsubscribe: <https://mailman.neomutt.org/mailman/options/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=unsubscribe>
+List-Archive: <https://mailman.neomutt.org/pipermail/neomutt-devel-neomutt.org/>
+List-Post: <mailto:neomutt-devel@neomutt.org>
+List-Help: <mailto:neomutt-devel-request@neomutt.org?subject=help>
+List-Subscribe: <https://mailman.neomutt.org/mailman/listinfo/neomutt-devel-neomutt.org>, 
+ <mailto:neomutt-devel-request@neomutt.org?subject=subscribe>
+Errors-To: neomutt-devel-bounces@neomutt.org
+Sender: "neomutt-devel" <neomutt-devel-bounces@neomutt.org>
+Status: RO
+Content-Length: 1162
+
+
+--xccx6jkigxzwzbz3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Thomas,
+
+> I've ran 2to3.py on it and seems to work to update the code.
+
+Thanks, that did the trick.
+Botty lives!
+
+Thanks!
+
+Rich
+
+--xccx6jkigxzwzbz3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEaa0dY2rCkuggZYwW68FQ5LXaY98FAl9fYIYACgkQ68FQ5LXa
+Y9/BYw/9FWNC0VoCWVC7D1aVWEcFjhIn5NcAR+TmBR4XOEy8IyqOeqH5ywuGxu0Z
+O6gejOjjgUwCsk95Swtl2QECtWLhJ4aLNUg+hUDaPJ69+VDxuG6NtXzJlXxqIPOT
+5g6oKu+ufpL3jtljnTgwKXGzXaxUfbA/+WD1/puMNZrt9aVc4Q4zcdl92WYY5XAx
+VDd4hOfQ1QF/wf2z1Zjqps/EnvMUycxb1TaYiZxtLGKKXwK/RDoiglhD3NxE2yfa
+jI+dUulTuHKxC0zdKzQRpfmMkCujVJ9ox5itvYFbB0NEwzMoUjK9ezPA8jw7vU7v
+/aviIdrr2DJ6uucop8l4DKCapKR/rT3xQH6AfYAmM5QXkSJFyDEGnaaTgaGGCYWM
+Z/dxWBwsaE7g9SsIPbIGncgC1SqckXkxLLsVbDXA7DxaWIXKBv1Gy8kJUadhm84M
+PzC/ViZuV9C7TNc/QIEF7fQWKOgEH/UpnFYeSgx7jAga9HoK18ukBC/wmfsBn7Ba
+GIZjaOyvEQRQ4swTaKC4sh3URi1RbeGZRr1tQ9xtRkBLjpd363GB3jPYZc6fAOm6
+brKa79Tg8Aw9GF41oQTPHfGRd8BHlPGDfxGX7HNxQRq3EVvsf70Z/k1dxD9qrp5b
+cztJ51YgxGc7p8XZgSvfuxDEV3N7/bvO8JhfPzL+KedxKD0qAw0=
+=Erpp
+-----END PGP SIGNATURE-----
+
+--xccx6jkigxzwzbz3--
+

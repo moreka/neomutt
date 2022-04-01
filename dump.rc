@@ -1,0 +1,6 @@
+set timeout = 1
+set dump_screen_file = "dump"
+
+timeout-hook "push <dump-screen><exit>"
+
+# vim: syn=neomuttrc

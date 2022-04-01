@@ -1,63 +1,45 @@
 name: Build and Test
 
 on:
-  pull_request:
   push:
     branches:
-      - 'master'
-      - 'devel/**'
-  workflow_dispatch:
+      - 'flatcap/**'
 
 jobs:
   build:
-    name: Build-${{ matrix.cfg.name }}
+    name: Build
     runs-on: ubuntu-latest
     container: ghcr.io/neomutt/docker-build
-
-    strategy:
-      # Limit jobs to one at a time so that ccache really helps later builds
-      max-parallel: 1
-      matrix:
-        cfg:
-          - name: default
-            options:
-          - name: disabled
-            options: --disable-idn --disable-nls --disable-pgp --disable-smime --ssl
-          - name: everything
-            options: --autocrypt --bdb --disable-idn --full-doc --gdbm --gnutls --gpgme --gss --idn2 --kyotocabinet --lmdb --lua --lz4 --notmuch --qdbm --sasl --tdb --tokyocabinet --with-lock=fcntl --zlib --zstd
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Checkout Test Files
-      uses: actions/checkout@v3
-      with:
-        repository: neomutt/neomutt-test-files
-        path: test-files
-
-    - name: Set Up Test Files
-      run: |
-        cd test-files
-        ./setup.sh
-
     - name: Compilation Cache
       uses: hendrikmuhs/ccache-action@v1.2
 
     - name: Configure Neomutt
-      run: ./configure ${{ matrix.cfg.options }}
+      run: ./configure --autocrypt --bdb --disable-idn --full-doc --gdbm --gnutls --gpgme --gss --idn2 --kyotocabinet --lmdb --lua --lz4 --notmuch --qdbm --sasl --tdb --tokyocabinet --with-lock=fcntl --zlib --zstd
 
     - name: Build Neomutt
       run: make -j 2
 
-    - name: Neomutt Version
-      run: ./neomutt -v
-
-    - name: Build Tests
-      run: make -j 2 test/neomutt-test
-
-    - name: Run Tests
+    - name: Neomutt Dump Screen
+      shell: script -q -e -c "bash {0}"
       run: |
-        export NEOMUTT_TEST_DIR=$GITHUB_WORKSPACE/test-files
-        make test
+        export TERM=xterm-256color
+        tty
+        tput lines
+        tput cols
+        mkdir -p $HOME/Mail
+        ./neomutt -d6 -l log -n -F dump.rc -f sample.mbox
+
+    - name: Upload logs
+      uses: actions/upload-artifact@v3
+      with:
+        name: logs
+        path: |
+          log0
+          dump0
+        retention-days: 10
 
