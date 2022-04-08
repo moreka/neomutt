@@ -773,7 +773,7 @@ struct KeyEvent km_dokey_event(enum MenuType mtype)
        * but less so than aborting the prompt.  */
       if (OptIgnoreMacroEvents)
       {
-        return (struct KeyEvent){ .ch = '\0', .op = OP_NULL };
+        return (struct KeyEvent){ .ch = tmp.ch, .op = OP_NULL };
       }
 
       if (n++ == 10)
