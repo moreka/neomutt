@@ -759,7 +759,7 @@ struct KeyEvent km_dokey_event(enum MenuType mtype)
     if (++pos == map->len)
     {
       if (map->op != OP_MACRO)
-        return (struct KeyEvent){ .ch = '\0', .op = map->op };
+        return (struct KeyEvent){ .ch = tmp.ch, .op = map->op };
 
       /* OptIgnoreMacroEvents turns off processing the MacroEvents buffer
        * in mutt_getch().  Generating new macro events during that time would
